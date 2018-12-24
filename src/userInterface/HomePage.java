@@ -76,7 +76,4 @@ public class HomePage {
 		homePageFrame.pack();
 		homePageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	/*public static void main(String args[]) {
-		new HomePage();
-	}*/
 }
