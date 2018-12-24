@@ -7,11 +7,11 @@ public class HomePage {
 	
 	public JFrame homePageFrame;
 	
-	private GridLayout frameLayout;
+	private GridLayout frameLayout, labelLayout, buttonLayout;
 	
 	private JButton searchButton, insertButton, deleteButton, updateButton;
 	
-	private JLabel idLabel, nameLabel, descLabel, locLabel, remarkLabel, yearLabel, collectLabel, ownerLabel, categoryLabel;
+	private JLabel idLabel, nameLabel, descLabel, locLabel, remarkLabel, yearLabel, collectLabel, ownerLabel, categoryLabel, materialLabel;
 	
 	private JPanel labelPanel, buttonPanel;
 	
@@ -32,22 +32,51 @@ public class HomePage {
 		collectLabel=new JLabel("Collection");
 		ownerLabel=new JLabel("Owner");
 		categoryLabel=new JLabel("Category");
+		materialLabel=new JLabel("Material");
 	}
 	
 	private void setPanel() {
+		labelPanel.add(idLabel);
+		labelPanel.add(nameLabel);
+		labelPanel.add(descLabel);
+		labelPanel.add(locLabel);
+		labelPanel.add(remarkLabel);
+		labelPanel.add(materialLabel);
+		labelPanel.add(yearLabel);
+		labelPanel.add(categoryLabel);
+		labelPanel.add(collectLabel);
+		labelPanel.add(ownerLabel);
 		
+		buttonPanel.add(searchButton);
+		buttonPanel.add(insertButton);
+		buttonPanel.add(updateButton);
+		buttonPanel.add(deleteButton);
 	}
 	
-	public HomePage() {
+	public HomePage() {		
+		setLabels();
+		setButtons();
+		
+		labelLayout=new GridLayout(1,9,5,0);
+		labelPanel=new JPanel();
+		labelPanel.setLayout(labelLayout);
+		
+		buttonLayout=new GridLayout(1,4,5,0);
+		buttonPanel=new JPanel();
+		buttonPanel.setLayout(buttonLayout);
+		
+		setPanel();
+		
 		homePageFrame=new JFrame();
 		frameLayout=new GridLayout(3,1,0,5);
-		labelPanel=new JPanel();
-		labelPanel.setLayout(new GridLayout(1,9));
-		buttonPanel=new JPanel();
-		buttonPanel.setLayout(new GridLayout(1,4));
-		setButtons();
-		setLabels();
-		setPanel();
+		homePageFrame.setLayout(frameLayout);
+		homePageFrame.setVisible(true);
+		homePageFrame.add(labelPanel);
+		homePageFrame.add(buttonPanel);
+		homePageFrame.pack();
+		homePageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
+	/*public static void main(String args[]) {
+		new HomePage();
+	}*/
 }
