@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class HomePage {
 	
-	public JFrame homePageFrame;
+	private JFrame homePageFrame;
 	
 	private GridLayout frameLayout, labelLayout, buttonLayout;
 	
