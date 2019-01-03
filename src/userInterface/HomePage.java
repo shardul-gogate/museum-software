@@ -1,9 +1,10 @@
 package userInterface;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
-public class HomePage {
+public class HomePage implements ActionListener {
 	
 	private JFrame homePageFrame;
 	
@@ -48,6 +49,7 @@ public class HomePage {
 		labelPanel.add(ownerLabel);
 		
 		buttonPanel.add(searchButton);
+		searchButton.addActionListener(this);
 		buttonPanel.add(insertButton);
 		buttonPanel.add(updateButton);
 		buttonPanel.add(deleteButton);
@@ -75,5 +77,8 @@ public class HomePage {
 		homePageFrame.add(buttonPanel);
 		homePageFrame.pack();
 		homePageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		
 	}
 }

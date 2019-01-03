@@ -5,9 +5,12 @@ import java.awt.*;
 
 public class Search {
 	
-	private JFrame searchOptionsFrame;
+	private JFrame searchOptions;
 	
-	private GridLayout frameLayout;
+	private JPanel radioPanel;
+	
+	private FlowLayout frameLayout;
+	private GridLayout radioPanelLayout;
 	
 	private JRadioButton idRadio, nameRadio, yearRadio, locRadio, ownerRadio, collectRadio, materialRadio;
 	
@@ -37,6 +40,17 @@ public class Search {
 		radioGroup.add(materialRadio);
 		radioGroup.add(ownerRadio);
 		radioGroup.add(collectRadio);
+		
+		radioPanelLayout=new GridLayout(7,1,0,5);
+		radioPanel=new JPanel();
+		radioPanel.setLayout(radioPanelLayout);
+		radioPanel.add(idRadio);
+		radioPanel.add(nameRadio);
+		radioPanel.add(locRadio);
+		radioPanel.add(yearRadio);
+		radioPanel.add(materialRadio);
+		radioPanel.add(ownerRadio);
+		radioPanel.add(collectRadio);
 	}
 	
 	public Search() {
@@ -48,23 +62,16 @@ public class Search {
 		
 		submitButton=new JButton("Submit");
 		
-		frameLayout=new GridLayout(10,1,0,5);
+		frameLayout=new FlowLayout();
 		
-		searchOptionsFrame=new JFrame();		
-		searchOptionsFrame.setLayout(frameLayout);
-		searchOptionsFrame.setVisible(true);
-		searchOptionsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		searchOptionsFrame.add(searchLabel);
-		searchOptionsFrame.add(idRadio);
-		searchOptionsFrame.add(nameRadio);
-		searchOptionsFrame.add(locRadio);
-		searchOptionsFrame.add(yearRadio);
-		searchOptionsFrame.add(materialRadio);
-		searchOptionsFrame.add(ownerRadio);
-		searchOptionsFrame.add(collectRadio);
-		searchOptionsFrame.add(queryField);
-		searchOptionsFrame.add(submitButton);
-		searchOptionsFrame.pack();
-		
+		searchOptions=new JFrame();		
+		searchOptions.setLayout(frameLayout);
+		searchOptions.setVisible(true);
+		searchOptions.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		searchOptions.add(searchLabel);
+		searchOptions.add(radioPanel);
+		searchOptions.add(queryField);
+		searchOptions.add(submitButton);
+		searchOptions.pack();
 	}
 }
