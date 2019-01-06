@@ -5,7 +5,7 @@ public class Main {
 		//new HomePage();
 		//new Search();
 		//new Update();
-		//new Login();
+		new Login();
 		return;
 	}
 }

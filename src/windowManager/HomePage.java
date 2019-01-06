@@ -1,6 +1,7 @@
 package windowManager;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class HomePage {
@@ -19,9 +20,19 @@ public class HomePage {
 	
 	private void setButtons() {
 		searchButton=new JButton("Search");
+		searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Search();
+			}
+		});
 		insertButton=new JButton("Insert");
 		deleteButton=new JButton("Delete");
 		updateButton=new JButton("Update");
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Update();
+			}
+		});
 	}
 	
 	private void setLabels() {

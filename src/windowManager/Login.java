@@ -2,6 +2,7 @@ package windowManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Login {
 	
@@ -23,7 +24,7 @@ public class Login {
 	
 	public Login() {
 		loginFrame=new JFrame();
-		loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frameLayout=new BoxLayout(loginFrame.getContentPane(),BoxLayout.Y_AXIS);
 		loginFrame.setLayout(frameLayout);
 		
@@ -43,6 +44,12 @@ public class Login {
 		
 		loginFrame.add(loginPanel);
 		loginFrame.add(loginButton);
+		loginButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new HomePage();
+				loginFrame.dispose();
+			}
+		});
 		loginFrame.pack();
 		loginFrame.setResizable(false);
 		loginFrame.setVisible(true);
