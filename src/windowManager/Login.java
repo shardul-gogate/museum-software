@@ -1,0 +1,50 @@
+package windowManager;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Login {
+	
+	private JTextField userName;
+	
+	private JPasswordField passWord;
+	
+	private JFrame loginFrame;
+	
+	private JPanel loginPanel;
+	
+	private JLabel userLabel,passLabel;
+	
+	private JButton loginButton;
+	
+	private BoxLayout frameLayout;
+	
+	private GridLayout panelLayout;
+	
+	public Login() {
+		loginFrame=new JFrame();
+		loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frameLayout=new BoxLayout(loginFrame.getContentPane(),BoxLayout.Y_AXIS);
+		loginFrame.setLayout(frameLayout);
+		
+		userName=new JTextField(20);
+		passWord=new JPasswordField(20);
+		userLabel=new JLabel("Username");
+		passLabel=new JLabel("Password");
+		loginButton=new JButton("Login");
+		
+		loginPanel=new JPanel();
+		panelLayout=new GridLayout(2,2);
+		loginPanel.setLayout(panelLayout);
+		loginPanel.add(userLabel);
+		loginPanel.add(userName);
+		loginPanel.add(passLabel);
+		loginPanel.add(passWord);
+		
+		loginFrame.add(loginPanel);
+		loginFrame.add(loginButton);
+		loginFrame.pack();
+		loginFrame.setResizable(false);
+		loginFrame.setVisible(true);
+	}
+}
