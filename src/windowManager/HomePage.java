@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class HomePage implements ActionListener{
+public class HomePage {
 	
 	private JFrame homePageFrame;
 	private GridLayout labelLayout, buttonLayout;
@@ -15,11 +15,29 @@ public class HomePage implements ActionListener{
 	
 	private void setButtons() {
 		searchButton=new JButton("Search");
-		searchButton.addActionListener(this);
+		searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Search();
+			}
+		});
 		insertButton=new JButton("Insert");
+		insertButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Insert();
+			}
+		});;
 		deleteButton=new JButton("Delete");
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Delete();
+			}
+		});;
 		updateButton=new JButton("Update");
-		updateButton.addActionListener(this);
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Update();
+			}
+		});;
 	}
 	
 	private void setLabels() {
@@ -52,7 +70,7 @@ public class HomePage implements ActionListener{
 		buttonPanel.add(deleteButton);
 	}
 	
-	public HomePage() {		
+	public HomePage() {
 		setLabels();
 		setButtons();
 		labelLayout=new GridLayout(1,9);
@@ -73,21 +91,5 @@ public class HomePage implements ActionListener{
 		homePageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		homePageFrame.setResizable(false);
 		homePageFrame.setLocationRelativeTo(null);
-	}
-	
-	public void actionPerformed(ActionEvent ae) {
-		Object actionSource=ae.getSource();
-		if(actionSource==searchButton) {
-			new Search();
-		}
-		else if(actionSource==insertButton) {
-			//new Insert();
-		}
-		else if(actionSource==updateButton) {
-			new Update();
-		}
-		else if(actionSource==deleteButton) {
-			//new Delete();
-		}
 	}
 }

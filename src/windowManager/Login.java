@@ -47,10 +47,12 @@ public class Login {
 	}
 	
 	public static void main(String args[]) {
+		//new Login();
 		//new HomePage();
 		//new Search();
+		new Insert();
 		//new Update();
-		new Login();
+		//new Delete();
 		return;
 	}
 }

@@ -4,12 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Search implements ActionListener{
+public class Search {
 	
 	private JFrame searchOptions,searchResults;
 	private JPanel radioPanel;
-	private BoxLayout frameLayout,resultLayout;
-	private GridLayout radioPanelLayout;
+	private BoxLayout frameLayout,resultLayout,radioPanelLayout;
 	private JRadioButton idRadio, nameRadio, yearRadio, locRadio, ownerRadio, collectRadio, materialRadio;
 	private ButtonGroup radioGroup;
 	private JLabel searchLabel;
@@ -44,8 +43,8 @@ public class Search implements ActionListener{
 		radioGroup.add(materialRadio);
 		radioGroup.add(ownerRadio);
 		radioGroup.add(collectRadio);
-		radioPanelLayout=new GridLayout(7,1);
 		radioPanel=new JPanel();
+		radioPanelLayout=new BoxLayout(radioPanel,BoxLayout.Y_AXIS);
 		radioPanel.setLayout(radioPanelLayout);
 		radioPanel.add(idRadio);
 		radioPanel.add(nameRadio);
@@ -70,7 +69,22 @@ public class Search implements ActionListener{
 		searchOptions.add(radioPanel);
 		searchOptions.add(queryField);
 		searchOptions.add(submitButton);
-		submitButton.addActionListener(this);
+		submitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String queryString=queryField.getText();
+				if(queryString.isEmpty()) {
+					JOptionPane.showMessageDialog(searchOptions,"Search input field is empty","No input",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				String radioSelected=getSelectedRadio();
+				if(radioSelected.isEmpty()) {
+					JOptionPane.showMessageDialog(searchOptions,"None of the categories are selected","No selection",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				searchOptions.setVisible(false);
+				searchResults(radioSelected,queryString);
+			}
+		});
 		searchOptions.pack();
 		searchOptions.setResizable(false);
 		searchOptions.setLocationRelativeTo(null);
@@ -82,35 +96,17 @@ public class Search implements ActionListener{
 		searchResults.setLayout(resultLayout);
 		searchResults.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		searchResults.setVisible(true);
-		backButton=new JButton("Back");
+		backButton=new JButton("Back to options");
 		searchResults.add(new JTextArea(10,10));
 		searchResults.add(backButton);
-		backButton.addActionListener(this);
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				searchResults.dispose();
+				searchOptions.setVisible(true);
+			}
+		});;
 		searchResults.pack();
 		searchResults.setResizable(false);
 		searchResults.setLocationRelativeTo(null);
-	}
-	
-	public void actionPerformed(ActionEvent ae) {
-		Object actionSource=ae.getSource();
-		if(actionSource==submitButton) {
-			String queryString=queryField.getText();
-			if(queryString.isEmpty()) {
-				JOptionPane.showMessageDialog(searchOptions,"Search input field is empty","No input",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			String radioSelected=getSelectedRadio();
-			if(radioSelected.isEmpty()) {
-				JOptionPane.showMessageDialog(searchOptions,"None of the categories are selected","No selection",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			searchOptions.setVisible(false);
-			searchResults(radioSelected,queryString);
-		}
-		
-		else if(actionSource==backButton) {
-			searchResults.dispose();
-			searchOptions.setVisible(true);
-		}
 	}
 }

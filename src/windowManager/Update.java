@@ -6,8 +6,7 @@ import javax.swing.*;
 public class Update {
 	private JFrame updateOptions;
 	private JPanel radioPanel;
-	private BoxLayout frameLayout;
-	private GridLayout radioPanelLayout;
+	private BoxLayout frameLayout,radioPanelLayout;
 	private JRadioButton artifactRadio,materialRadio,categoryRadio,collectRadio,ownerRadio;
 	private ButtonGroup radioGroup;
 	private JButton submitButton;
@@ -25,8 +24,8 @@ public class Update {
 		radioGroup.add(collectRadio);
 		ownerRadio=new JRadioButton("Owner");
 		radioGroup.add(ownerRadio);
-		radioPanelLayout=new GridLayout(5,1);
 		radioPanel=new JPanel();
+		radioPanelLayout=new BoxLayout(radioPanel,BoxLayout.Y_AXIS);
 		radioPanel.setLayout(radioPanelLayout);
 		radioPanel.add(artifactRadio);
 		radioPanel.add(categoryRadio);
