@@ -1,8 +1,10 @@
 package windowManager;
 
-import java.awt.*;
 import javax.swing.*;
 
+/**
+ * Class used for the page of Updating the artifact
+ */
 public class Update {
 	private JFrame updateOptions;
 	private JPanel radioPanel;
@@ -12,6 +14,10 @@ public class Update {
 	private JButton submitButton;
 	private JLabel updateLabel,idLabel;
 	private JTextField idField;
+	
+	/**
+	 * constructs radio button and panel
+	 */
 	private void setRadio() {
 		radioGroup=new ButtonGroup();
 		artifactRadio=new JRadioButton("Artifact",true);
@@ -34,6 +40,10 @@ public class Update {
 		radioPanel.add(ownerRadio);
 	}
 	
+	/**
+	 * default constructor
+	 * constructs frame and adds components
+	 */
 	public Update() {
 		setRadio();
 		updateLabel=new JLabel("Update entry in table:");

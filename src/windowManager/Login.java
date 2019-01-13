@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * First screen of the software thus contains main method
+ */
 public class Login {
 	
 	private JTextField userName;
@@ -15,6 +18,11 @@ public class Login {
 	private BoxLayout frameLayout;
 	private GridLayout panelLayout;
 	
+	/**
+	 * Default and only constructor of the class
+	 * Constructs frame for accepting user input of username and password
+	 * Opens home-page of the software if credentials are valid
+	 */
 	public Login() {
 		loginFrame=new JFrame("Login");
 		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,11 +54,15 @@ public class Login {
 		loginFrame.setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * Main method of the software
+	 * Launches the software by giving call to the Login class constructor
+	 */
 	public static void main(String args[]) {
-		//new Login();
+		new Login();
 		//new HomePage();
 		//new Search();
-		new Insert();
+		//new Insert();
 		//new Update();
 		//new Delete();
 		return;

@@ -1,9 +1,11 @@
 package windowManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * this class constructs page of search options and results
+ */
 public class Search {
 	
 	private JFrame searchOptions,searchResults;
@@ -15,6 +17,9 @@ public class Search {
 	private JTextField queryField;
 	private JButton submitButton,backButton;
 	
+	/**
+	 * @return Action command for selected radio button in the search option
+	 */
 	private String getSelectedRadio() {
 		String radioSelected="";
 		if(idRadio.isSelected()) radioSelected="id";
@@ -27,6 +32,9 @@ public class Search {
 		return radioSelected;
 	}
 	
+	/**
+	 * Constructs all the radio buttons and adds them to the panels
+	 */
 	private void setRadio() {
 		idRadio=new JRadioButton("ID",true);
 		nameRadio=new JRadioButton("Name");
@@ -55,6 +63,11 @@ public class Search {
 		radioPanel.add(collectRadio);
 	}
 	
+	/**
+	 * default constructor
+	 * constructs frame and calls component methods
+	 * adds action listener to search button to proceed to search results under appropriate circumstances
+	 */
 	public Search() {
 		setRadio();
 		searchLabel=new JLabel("Seach By");
@@ -90,6 +103,11 @@ public class Search {
 		searchOptions.setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * displays the search results in tabular format
+	 * @param radioSelected - is the action command of the selected radio button in the option
+	 * @param queryString - is the actual content that is to be searched in the selected fields
+	 */
 	private void searchResults(String radioSelected,String queryString) {
 		searchResults=new JFrame("Search Results");
 		resultLayout= new BoxLayout(searchResults.getContentPane(),BoxLayout.Y_AXIS);

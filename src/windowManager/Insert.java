@@ -1,21 +1,42 @@
 package windowManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
+import java.awt.*;
 
+/**
+ * Still under construction
+ * Class for page of Inserting the artifacts
+ */
 public class Insert {
 	private JRadioButton artifactRadio,materialRadio,categoryRadio,collectRadio,ownerRadio;
 	private ButtonGroup radioGroup;
-	private JButton submitButton;
-	private JPanel radioPanel;
+	private JButton submitButton,insertButton;
+	private JPanel radioPanel,fieldsPanel;
 	private JFrame insertOptions,insertFieldsFrame;
 	private BoxLayout optionsLayout,fieldsLayout,radioLayout;
+	private GridLayout fieldsPanelLayout;
 	private JLabel insertLabel;
 	private JTextField nameField,yearField,locField,remarkField;
 	private JTextArea desciption;
 	private JComboBox collectBox,categoryBox,materialBox,OwnerBox;
+	private JLabel nameLabel,yearLabel,locLabel,remarkLabel,descriptionLabel,collectLabel,ownerLabel,materialLabel,categoryLabel;
 	
+	/**
+	 * @return returns the action command of the radio button
+	 */
+	private String getSelectedRadio() {
+		if(artifactRadio.isSelected()) return "location";
+		else if(ownerRadio.isSelected()) return "owner";
+		else if(collectRadio.isSelected()) return "collection";
+		else if(materialRadio.isSelected()) return "material";
+		else if(categoryRadio.isSelected()) return "category";
+		return "";
+	}
+	
+	/**
+	 * method that constructs radio buttons and panels
+	 */
 	private void setRadio() {
 		radioPanel=new JPanel();
 		radioLayout=new BoxLayout(radioPanel,BoxLayout.Y_AXIS);
@@ -38,10 +59,32 @@ public class Insert {
 		radioPanel.add(ownerRadio);
 	}
 	
-	private void insertFields() {
-		insertFieldsFrame=new JFrame("Input Fields");
+	/**
+	 * this method is invoked if the user wants to insert and artifact
+	 */
+	private void insertArtifact() {
+		insertFieldsFrame=new JFrame("Insert Artifact details");
 		fieldsLayout=new BoxLayout(insertFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
 		insertFieldsFrame.setLayout(fieldsLayout);
+		fieldsPanel=new JPanel();
+		fieldsPanelLayout=new GridLayout(4,2);
+		fieldsPanel.setLayout(fieldsPanelLayout);
+		nameLabel=new JLabel("Name");
+		fieldsPanel.add(nameLabel);
+		nameField=new JTextField(20);
+		fieldsPanel.add(nameField);
+		yearLabel=new JLabel("Year");
+		fieldsPanel.add(yearLabel);
+		yearField=new JTextField(20);
+		fieldsPanel.add(yearField);
+		locLabel=new JLabel("Location");
+		fieldsPanel.add(locLabel);
+		locField=new JTextField(20);
+		fieldsPanel.add(locField);
+		remarkLabel=new JLabel("Remark");
+		fieldsPanel.add(remarkLabel);
+		remarkField=new JTextField(20);
+		fieldsPanel.add(remarkField);
 		
 		insertFieldsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		insertFieldsFrame.pack();
@@ -50,6 +93,11 @@ public class Insert {
 		insertFieldsFrame.setResizable(false);
 	}
 	
+	/**
+	 * default constructor
+	 * constructs frame
+	 * calls different methods according to what user wants to insert
+	 */
 	public Insert() {
 		setRadio();
 		insertLabel=new JLabel("Insert");
@@ -62,7 +110,12 @@ public class Insert {
 		insertOptions.add(submitButton);
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				insertFields();
+				String radioSelected=getSelectedRadio();
+				if(radioSelected.isEmpty()) {
+					JOptionPane.showMessageDialog(insertOptions,"None of the categories are selected","No selection",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if(radioSelected=="artifact") insertArtifact();
 			}
 		});
 		insertOptions.pack();
