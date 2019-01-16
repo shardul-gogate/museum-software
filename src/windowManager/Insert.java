@@ -31,7 +31,7 @@ public class Insert {
 		else if(collectRadio.isSelected()) return "collection";
 		else if(materialRadio.isSelected()) return "material";
 		else if(categoryRadio.isSelected()) return "category";
-		return "";
+		else return "";
 	}
 	
 	/**
