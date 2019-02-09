@@ -17,18 +17,6 @@ public class Update {
 	private JTextField idField;
 	
 	/**
-	 * @return returns the action command of the radio button
-	 */
-	private String getSelectedRadio() {
-		if(artifactRadio.isSelected()) return "location";
-		else if(ownerRadio.isSelected()) return "owner";
-		else if(collectRadio.isSelected()) return "collection";
-		else if(materialRadio.isSelected()) return "material";
-		else if(categoryRadio.isSelected()) return "category";
-		else return "";
-	}
-	
-	/**
 	 * constructs radio button and panel
 	 */
 	private void setRadio() {
@@ -77,11 +65,6 @@ public class Update {
 				String queryString=idField.getText();
 				if(queryString.isEmpty()) {
 					JOptionPane.showMessageDialog(updateOptions,"ID input field is empty","No input",JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				String radioSelected=getSelectedRadio();
-				if(radioSelected.isEmpty()) {
-					JOptionPane.showMessageDialog(updateOptions,"None of the categories are selected","No selection",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 			}

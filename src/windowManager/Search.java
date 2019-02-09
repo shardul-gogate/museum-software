@@ -6,7 +6,7 @@ import java.awt.event.*;
 /**
  * this class constructs page of search options and results
  */
-public class Search {
+public class Search implements ActionListener{
 	
 	private JFrame searchOptions,searchResults;
 	private JPanel radioPanel;
@@ -16,33 +16,35 @@ public class Search {
 	private JLabel searchLabel;
 	private JTextField queryField;
 	private JButton submitButton,backButton;
-	
-	/**
-	 * @return Action command for selected radio button in the search option
-	 */
-	private String getSelectedRadio() {
-		String radioSelected="";
-		if(idRadio.isSelected()) radioSelected="id";
-		else if(nameRadio.isSelected()) radioSelected="name";
-		else if(yearRadio.isSelected()) radioSelected="year";
-		else if(locRadio.isSelected()) radioSelected="location";
-		else if(ownerRadio.isSelected()) radioSelected="owner";
-		else if(collectRadio.isSelected()) radioSelected="collection";
-		else if(materialRadio.isSelected()) radioSelected="material";		
-		return radioSelected;
-	}
+	private JComboBox locationList;
 	
 	/**
 	 * Constructs all the radio buttons and adds them to the panels
 	 */
 	private void setRadio() {
 		idRadio=new JRadioButton("ID",true);
+		idRadio.addActionListener(this);
 		nameRadio=new JRadioButton("Name");
+		nameRadio.addActionListener(this);
 		yearRadio=new JRadioButton("Year");
+		yearRadio.addActionListener(this);
 		locRadio=new JRadioButton("Location");
+		locRadio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae)
+			{
+				searchOptions.remove(queryField);
+				searchOptions.remove(submitButton);
+				searchOptions.add(locationList);
+				searchOptions.add(submitButton);
+				searchOptions.pack();
+			}
+		});
 		ownerRadio=new JRadioButton("Owner");
+		ownerRadio.addActionListener(this);
 		collectRadio=new JRadioButton("Collection");
+		collectRadio.addActionListener(this);
 		materialRadio=new JRadioButton("Material");
+		materialRadio.addActionListener(this);
 		radioGroup=new ButtonGroup();
 		radioGroup.add(idRadio);
 		radioGroup.add(nameRadio);
@@ -71,7 +73,8 @@ public class Search {
 	public Search() {
 		setRadio();
 		searchLabel=new JLabel("Seach By");
-		queryField=new JTextField(20);
+		queryField=new JTextField(15);
+		locationList=new JComboBox();
 		submitButton=new JButton("Submit");
 		searchOptions=new JFrame("Searh Options");
 		frameLayout=new BoxLayout(searchOptions.getContentPane(),BoxLayout.Y_AXIS);
@@ -89,13 +92,7 @@ public class Search {
 					JOptionPane.showMessageDialog(searchOptions,"Search input field is empty","No input",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				String radioSelected=getSelectedRadio();
-				if(radioSelected.isEmpty()) {
-					JOptionPane.showMessageDialog(searchOptions,"None of the categories are selected","No selection",JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				searchOptions.setVisible(false);
-				searchResults(radioSelected,queryString);
+				//searchResults(radioSelected,queryString);
 			}
 		});
 		searchOptions.pack();
@@ -126,5 +123,14 @@ public class Search {
 		searchResults.pack();
 		searchResults.setResizable(false);
 		searchResults.setLocationRelativeTo(null);
+	}
+	
+	public void actionPerformed(ActionEvent ae)
+	{
+		searchOptions.remove(locationList);
+		searchOptions.remove(submitButton);
+		searchOptions.add(queryField);
+		searchOptions.add(submitButton);
+		searchOptions.pack();
 	}
 }

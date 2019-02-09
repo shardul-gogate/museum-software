@@ -16,23 +16,10 @@ public class Insert {
 	private JFrame insertOptions,insertFieldsFrame;
 	private BoxLayout optionsLayout,fieldsLayout,radioLayout;
 	private GridLayout fieldsPanelLayout;
-	private JLabel insertLabel;
-	private JTextField nameField,yearField,locField,remarkField;
+	private JTextField idField,nameField,yearField,locField,remarkField;
 	private JTextArea desciption;
 	private JComboBox collectBox,categoryBox,materialBox,OwnerBox;
-	private JLabel nameLabel,yearLabel,locLabel,remarkLabel,descriptionLabel,collectLabel,ownerLabel,materialLabel,categoryLabel;
-	
-	/**
-	 * @return returns the action command of the radio button
-	 */
-	private String getSelectedRadio() {
-		if(artifactRadio.isSelected()) return "location";
-		else if(ownerRadio.isSelected()) return "owner";
-		else if(collectRadio.isSelected()) return "collection";
-		else if(materialRadio.isSelected()) return "material";
-		else if(categoryRadio.isSelected()) return "category";
-		else return "";
-	}
+	private JLabel idLabel,nameLabel,yearLabel,locLabel,remarkLabel,descLabel,collectLabel,ownerLabel,materialLabel,categoryLabel,insertLabel;
 	
 	/**
 	 * method that constructs radio buttons and panels
@@ -59,63 +46,59 @@ public class Insert {
 		radioPanel.add(ownerRadio);
 	}
 	
+	private void setLabels()
+	{
+		nameLabel=new JLabel("Name");
+		yearLabel=new JLabel("Year");
+		locLabel=new JLabel("Location");
+		remarkLabel=new JLabel("Remark");
+		descLabel=new JLabel("Description");
+		collectLabel=new JLabel("Collection");
+		categoryLabel=new JLabel("Category");
+		materialLabel=new JLabel("Material");
+		ownerLabel=new JLabel("Owner");
+	}
+	
+	private void setFields()
+	{
+		idField=new JTextField(20);
+		nameField=new JTextField(20);
+		remarkField=new JTextField(20);
+		locField=new JTextField(20);
+	}
+	
 	/**
 	 * this method is invoked if the user wants to insert and artifact
 	 */
-	private void insertArtifact() {
-		insertFieldsFrame=new JFrame("Insert Artifact details");
-		fieldsLayout=new BoxLayout(insertFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
-		insertFieldsFrame.setLayout(fieldsLayout);
-		fieldsPanel=new JPanel();
-		fieldsPanelLayout=new GridLayout(4,2);
-		fieldsPanel.setLayout(fieldsPanelLayout);
-		nameLabel=new JLabel("Name");
-		fieldsPanel.add(nameLabel);
-		nameField=new JTextField(20);
-		fieldsPanel.add(nameField);
-		yearLabel=new JLabel("Year");
-		fieldsPanel.add(yearLabel);
-		yearField=new JTextField(20);
-		fieldsPanel.add(yearField);
-		locLabel=new JLabel("Location");
-		fieldsPanel.add(locLabel);
-		locField=new JTextField(20);
-		fieldsPanel.add(locField);
-		remarkLabel=new JLabel("Remark");
-		fieldsPanel.add(remarkLabel);
-		remarkField=new JTextField(20);
-		fieldsPanel.add(remarkField);
+	private void insertFrame() {
+		insertFieldsFrame=new JFrame("Insert");
 		
-		insertFieldsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		insertFieldsFrame.pack();
 		insertFieldsFrame.setVisible(true);
-		insertFieldsFrame.setLocationRelativeTo(null);
 		insertFieldsFrame.setResizable(false);
+		insertFieldsFrame.setLocationRelativeTo(null);
 	}
 	
 	/**
 	 * default constructor
 	 * constructs frame
-	 * calls different methods according to what user wants to insert
 	 */
 	public Insert() {
 		setRadio();
+		setLabels();
+		setFields();
 		insertLabel=new JLabel("Insert");
 		insertOptions=new JFrame("Insert Options");
 		optionsLayout=new BoxLayout(insertOptions.getContentPane(),BoxLayout.Y_AXIS);
 		insertOptions.setLayout(optionsLayout);
 		submitButton=new JButton("Submit");
+		insertButton=new JButton("Insert");
 		insertOptions.add(insertLabel);
 		insertOptions.add(radioPanel);
 		insertOptions.add(submitButton);
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				String radioSelected=getSelectedRadio();
-				if(radioSelected.isEmpty()) {
-					JOptionPane.showMessageDialog(insertOptions,"None of the categories are selected","No selection",JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				if(radioSelected=="artifact") insertArtifact();
+				insertFrame();				
 			}
 		});
 		insertOptions.pack();
