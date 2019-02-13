@@ -14,10 +14,10 @@ public class Insert {
 	private JButton submitButton,insertButton;
 	private JPanel radioPanel,fieldsPanel;
 	private JFrame insertOptions,insertFieldsFrame;
-	private BoxLayout optionsLayout,fieldsLayout,radioLayout;
+	private BoxLayout optionsLayout,fieldsFrameLayout,radioLayout;
 	private GridLayout fieldsPanelLayout;
 	private JTextField idField,nameField,yearField,locField,remarkField;
-	private JTextArea desciption;
+	private JTextArea description;
 	private JComboBox collectBox,categoryBox,materialBox,OwnerBox;
 	private JLabel idLabel,nameLabel,yearLabel,locLabel,remarkLabel,descLabel,collectLabel,ownerLabel,materialLabel,categoryLabel,insertLabel;
 	
@@ -46,8 +46,7 @@ public class Insert {
 		radioPanel.add(ownerRadio);
 	}
 	
-	private void setLabels()
-	{
+	private void setLabels() {
 		nameLabel=new JLabel("Name");
 		yearLabel=new JLabel("Year");
 		locLabel=new JLabel("Location");
@@ -57,22 +56,47 @@ public class Insert {
 		categoryLabel=new JLabel("Category");
 		materialLabel=new JLabel("Material");
 		ownerLabel=new JLabel("Owner");
+		idLabel=new JLabel("ID");
 	}
 	
-	private void setFields()
-	{
+	private void setFields() {
 		idField=new JTextField(20);
 		nameField=new JTextField(20);
 		remarkField=new JTextField(20);
 		locField=new JTextField(20);
+		description=new JTextArea(5,20);
 	}
 	
 	/**
-	 * this method is invoked if the user wants to insert and artifact
+	 * this method is invoked if the user wants to insert an artifact
 	 */
 	private void insertFrame() {
 		insertFieldsFrame=new JFrame("Insert");
 		
+		insertFieldsFrame.pack();
+		insertFieldsFrame.setVisible(true);
+		insertFieldsFrame.setResizable(false);
+		insertFieldsFrame.setLocationRelativeTo(null);
+	}
+	
+	private void genericFrame() {
+		insertFieldsFrame=new JFrame();
+		
+		if(materialRadio.isSelected()) insertFieldsFrame.setTitle("Material");
+		else if(ownerRadio.isSelected()) insertFieldsFrame.setTitle("Owner");
+		else if(categoryRadio.isSelected()) insertFieldsFrame.setTitle("Category");
+		
+		fieldsFrameLayout=new BoxLayout(insertFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
+		insertFieldsFrame.setLayout(fieldsFrameLayout);
+		fieldsPanel=new JPanel();
+		fieldsPanelLayout=new GridLayout(2,2);
+		fieldsPanel.setLayout(fieldsPanelLayout);
+		fieldsPanel.add(idLabel);
+		fieldsPanel.add(idField);
+		fieldsPanel.add(nameLabel);
+		fieldsPanel.add(nameField);
+		insertFieldsFrame.add(fieldsPanel);
+		insertFieldsFrame.add(insertButton);
 		insertFieldsFrame.pack();
 		insertFieldsFrame.setVisible(true);
 		insertFieldsFrame.setResizable(false);
@@ -98,7 +122,8 @@ public class Insert {
 		insertOptions.add(submitButton);
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				insertFrame();				
+				if(artifactRadio.isSelected()) insertFrame();
+				else if(materialRadio.isSelected() || ownerRadio.isSelected() || categoryRadio.isSelected()) genericFrame();
 			}
 		});
 		insertOptions.pack();
