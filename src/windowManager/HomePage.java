@@ -72,19 +72,6 @@ public class HomePage {
 	 * this method constructs the panels and adds all the necessary components to them
 	 */
 	private void setPanel() {
-		labelLayout=new GridLayout(1,9);
-		labelPanel=new JPanel();
-		labelPanel.setLayout(labelLayout);
-		labelPanel.add(idLabel);
-		labelPanel.add(nameLabel);
-		labelPanel.add(descLabel);
-		labelPanel.add(locLabel);
-		labelPanel.add(remarkLabel);
-		labelPanel.add(materialLabel);
-		labelPanel.add(yearLabel);
-		labelPanel.add(categoryLabel);
-		labelPanel.add(collectLabel);
-		labelPanel.add(ownerLabel);
 		buttonLayout=new GridLayout(1,4);
 		buttonPanel=new JPanel();
 		buttonPanel.setLayout(buttonLayout);
@@ -95,14 +82,47 @@ public class HomePage {
 	}
 	
 	private void constructArtifactTable() {
+		Vector<Vector<String>> artifactData=new Vector<Vector<String>>();
+		Vector<String> colomnName=new Vector<String>();
 		try {
+			dbMain.rs=dbMain.stmt.executeQuery("SELECT * FROM artifact;");
+			dbMain.rsmd=dbMain.rs.getMetaData();
 			int colomnCount=dbMain.rsmd.getColumnCount();
+			for(int i=1;i<=colomnCount;i++) {
+				String currentColomnName=dbMain.rsmd.getColumnName(i);
+				colomnName.add(currentColomnName);
+			}
+			artifactData.add(colomnName);
+			dbMain.rs=dbMain.stmt.executeQuery("Select * from Artifact;");
+			while(dbMain.rs.next()) {
+				Vector<String> rowData=new Vector<String>();
+				String artifactId=dbMain.rs.getString(1);
+				rowData.add(artifactId);
+				String artifactName=dbMain.rs.getString(2);
+				rowData.add(artifactName);
+				String remark=dbMain.rs.getString(3);
+				rowData.add(remark);
+				String location=dbMain.rs.getString(4);
+				rowData.add(location);
+				String description=dbMain.rs.getString(5);
+				rowData.add(description);
+				String year=dbMain.rs.getString(6);
+				rowData.add(year);
+				String materialName=dbMain.getMaterialName(dbMain.rs.getString(6));
+				rowData.add(materialName);
+				String categoryName=dbMain.getCategoryName(dbMain.rs.getString(7));
+				rowData.add(categoryName);
+				String ownerName=dbMain.getOwnerName(dbMain.rs.getString(8));
+				rowData.add(ownerName);
+				String collection=dbMain.getCollectionName(dbMain.rs.getString(9));
+				rowData.add(collection);
+				artifactData.add(rowData);
+			}
+			artifactTable=new JTable(artifactData,colomnName);
 		}
 		catch(SQLException sqle) {
 			dbMain.SQLExceptionMessage();
 		}
-		Vector artifactData=new Vector();
-		Vector rowData=new Vector();
 	}
 	
 	/**
@@ -117,7 +137,6 @@ public class HomePage {
 		frameLayout=new BoxLayout(homePageFrame.getContentPane(),BoxLayout.Y_AXIS);
 		homePageFrame.setLayout(frameLayout);
 		homePageFrame.setVisible(true);
-		homePageFrame.add(labelPanel);
 		constructArtifactTable();
 		homePageFrame.add(artifactTable);
 		homePageFrame.add(buttonPanel);

@@ -1,8 +1,9 @@
 package windowManager;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.GridLayout;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 /**
  * First screen of the software thus contains main method
@@ -18,12 +19,39 @@ public class Login {
 	private BoxLayout frameLayout;
 	private GridLayout panelLayout;
 	
+	private boolean credentialsValid() {
+		String userNameEntered=userName.getText();
+		String passWordEntered=new String(passWord.getPassword());
+		if(userNameEntered.isEmpty() || passWordEntered.isEmpty()) {
+			JOptionPane.showMessageDialog(null,"Please enter Username and Password properly","Empty Input",JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		try {
+			dbMain.rs=dbMain.stmt.executeQuery("SELECT password FROM admin WHERE username='" + userNameEntered + "';");
+			if(dbMain.rs.next()) {
+				String passWordInDb=dbMain.rs.getString(1);
+				if(passWordEntered.equals(passWordInDb)) {
+					return true;
+				}
+				JOptionPane.showMessageDialog(null,"Please enter a correct Password","Wrong Password",JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+		}
+		catch(SQLException sqle) {
+			//dbMain.SQLExceptionMessage();
+			JOptionPane.showMessageDialog(null,sqle,"SQL Error",JOptionPane.ERROR_MESSAGE);
+		}
+		JOptionPane.showMessageDialog(null,"Please enter a correct Username","Wrong Username",JOptionPane.ERROR_MESSAGE);
+		return false;
+	}
+	
 	/**
 	 * Default and only constructor of the class
 	 * Constructs frame for accepting user input of username and password
 	 * Opens home-page of the software if credentials are valid
 	 */
 	public Login() {
+		dbMain=new Database();
 		loginFrame=new JFrame("Login");
 		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frameLayout=new BoxLayout(loginFrame.getContentPane(),BoxLayout.Y_AXIS);
@@ -44,8 +72,10 @@ public class Login {
 		loginFrame.add(loginButton);
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				new HomePage(dbMain);
-				loginFrame.dispose();
+				if(credentialsValid()) {
+					new HomePage(dbMain);
+					loginFrame.dispose();
+				}
 			}
 		});
 		loginFrame.pack();

@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 public class Database {
 	public Connection conn;
 	public Statement stmt;
-	ResultSet rs;
-	ResultSetMetaData rsmd;
+	public ResultSet rs;
+	public ResultSetMetaData rsmd;
 	
 	public void SQLExceptionMessage() {
 		JOptionPane.showMessageDialog(null,"Sorry!\nSQL encountered an error","SQL Exception",JOptionPane.ERROR_MESSAGE);
@@ -18,7 +18,7 @@ public class Database {
 		JOptionPane.showMessageDialog(null,"Sorry!\nAn unknown error was encountered","Unknown Error",JOptionPane.ERROR_MESSAGE);
 	}
 	
-	public String getMaterialName(int materialId) {
+	public String getMaterialName(String materialId) {
 		String materialName=null;
 		try {
 			rs=stmt.executeQuery("SELECT mat_nam FROM mateial WHERE mat_id=" + materialId);
@@ -30,11 +30,11 @@ public class Database {
 		return materialName;
 	}
 	
-	public String getCategoryName(int categorylId) {
+	public String getCategoryName(String categorylId) {
 		String categoryName=null;
 		try {
 			rs=stmt.executeQuery("SELECT cat_name FROM mateial WHERE cat_id=" + categorylId);
-			categoryName= rs.getString(1);
+			categoryName=rs.getString(1);
 		}
 		catch(SQLException sqle) {
 			SQLExceptionMessage();
@@ -42,11 +42,11 @@ public class Database {
 		return categoryName;
 	}
 	
-	public String getCollectionName(int collectionlId) {
+	public String getCollectionName(String collectionlId) {
 		String collectionName=null;
 		try {
 			rs=stmt.executeQuery("SELECT collect_name FROM mateial WHERE collect_id=" + collectionlId);
-			collectionName= rs.getString(1);
+			collectionName=rs.getString(1);
 		}
 		catch(SQLException sqle) {
 			SQLExceptionMessage();
@@ -54,11 +54,11 @@ public class Database {
 		return collectionName;
 	}
 	
-	public String getOwnerName(int ownerId) {
+	public String getOwnerName(String ownerId) {
 		String ownerName=null;
 		try {
 			rs=stmt.executeQuery("SELECT owner_name FROM mateial WHERE owner_id=" + ownerId);
-			ownerName= rs.getString(1);
+			ownerName=rs.getString(1);
 		}
 		catch(SQLException sqle) {
 			SQLExceptionMessage();
@@ -68,14 +68,16 @@ public class Database {
 	
 	public Database() {
 		try {
-			Class.forName("org.postgresql.driver");
+			Class.forName("org.postgresql.Driver");
 			conn=DriverManager.getConnection("jdbc:postgresql://localhost/postgres","postgres","abcd1234");
+			stmt=conn.createStatement();
 		}
 		catch(ClassNotFoundException cnfe) {
 			UnknownErrorMessage();
 		}
 		catch(SQLException sqle) {
-			SQLExceptionMessage();
+			//SQLExceptionMessage();
+			JOptionPane.showMessageDialog(null,sqle,"SQL Error",JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
