@@ -60,17 +60,18 @@ public class Insert {
 	}
 	
 	private void setFields() {
-		idField=new JTextField(20);
-		nameField=new JTextField(20);
-		remarkField=new JTextField(20);
-		locField=new JTextField(20);
-		description=new JTextArea(5,20);
+		idField=new JTextField(15);
+		nameField=new JTextField(15);
+		remarkField=new JTextField(15);
+		locField=new JTextField(15);
+		yearField=new JTextField(15);
+		description=new JTextArea(5,15);
 	}
 	
 	/**
 	 * this method is invoked if the user wants to insert an artifact
 	 */
-	private void insertFrame() {
+	private void artifactFrame() {
 		insertFieldsFrame=new JFrame("Insert");
 		
 		insertFieldsFrame.pack();
@@ -81,11 +82,9 @@ public class Insert {
 	
 	private void genericFrame() {
 		insertFieldsFrame=new JFrame();
-		
 		if(materialRadio.isSelected()) insertFieldsFrame.setTitle("Material");
 		else if(ownerRadio.isSelected()) insertFieldsFrame.setTitle("Owner");
 		else if(categoryRadio.isSelected()) insertFieldsFrame.setTitle("Category");
-		
 		fieldsFrameLayout=new BoxLayout(insertFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
 		insertFieldsFrame.setLayout(fieldsFrameLayout);
 		fieldsPanel=new JPanel();
@@ -93,8 +92,32 @@ public class Insert {
 		fieldsPanel.setLayout(fieldsPanelLayout);
 		fieldsPanel.add(idLabel);
 		fieldsPanel.add(idField);
+		nameLabel.setText("Name");
 		fieldsPanel.add(nameLabel);
 		fieldsPanel.add(nameField);
+		insertFieldsFrame.add(fieldsPanel);
+		insertFieldsFrame.add(insertButton);
+		insertFieldsFrame.pack();
+		insertFieldsFrame.setVisible(true);
+		insertFieldsFrame.setResizable(false);
+		insertFieldsFrame.setLocationRelativeTo(null);
+	}
+	
+	private void collectFrame() {
+		insertFieldsFrame=new JFrame("Collection");
+		fieldsFrameLayout=new BoxLayout(insertFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
+		insertFieldsFrame.setLayout(fieldsFrameLayout);
+		fieldsPanel=new JPanel();
+		fieldsPanelLayout=new GridLayout(3,2);
+		fieldsPanel.setLayout(fieldsPanelLayout);
+		fieldsPanel.add(idLabel);
+		fieldsPanel.add(idField);
+		nameLabel.setText("Given By"); //Here, name refers to the name of the donator
+		fieldsPanel.add(nameLabel);
+		fieldsPanel.add(nameField);
+		yearLabel.setText("Given in Year"); //here, year refers to the year collection was donated
+		fieldsPanel.add(yearLabel);
+		fieldsPanel.add(yearField);
 		insertFieldsFrame.add(fieldsPanel);
 		insertFieldsFrame.add(insertButton);
 		insertFieldsFrame.pack();
@@ -122,8 +145,9 @@ public class Insert {
 		insertOptions.add(submitButton);
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				if(artifactRadio.isSelected()) insertFrame();
+				if(artifactRadio.isSelected()) artifactFrame();
 				else if(materialRadio.isSelected() || ownerRadio.isSelected() || categoryRadio.isSelected()) genericFrame();
+				else if(collectRadio.isSelected()) collectFrame();
 			}
 		});
 		insertOptions.pack();

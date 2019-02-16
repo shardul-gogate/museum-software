@@ -92,7 +92,6 @@ public class Search implements ActionListener{
 					JOptionPane.showMessageDialog(searchOptions,"Search input field is empty","No input",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				//searchResults(radioSelected,queryString);
 			}
 		});
 		searchOptions.pack();
