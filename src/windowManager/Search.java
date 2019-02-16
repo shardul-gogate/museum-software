@@ -1,5 +1,7 @@
 package windowManager;
 
+import java.awt.Rectangle;
+import java.awt.Dimension;
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -72,11 +74,11 @@ public class Search implements ActionListener{
 	 */
 	public Search() {
 		setRadio();
-		searchLabel=new JLabel("Seach By");
+		searchLabel=new JLabel("Search By");
 		queryField=new JTextField(15);
 		locationList=new JComboBox();
 		submitButton=new JButton("Submit");
-		searchOptions=new JFrame("Searh Options");
+		searchOptions=new JFrame("Search Options");
 		frameLayout=new BoxLayout(searchOptions.getContentPane(),BoxLayout.Y_AXIS);
 		searchOptions.setLayout(frameLayout);
 		searchOptions.setVisible(true);
@@ -95,7 +97,7 @@ public class Search implements ActionListener{
 			}
 		});
 		searchOptions.pack();
-		searchOptions.setResizable(false);
+		searchOptions.setResizable(true);
 		searchOptions.setLocationRelativeTo(null);
 	}
 	
@@ -120,7 +122,7 @@ public class Search implements ActionListener{
 			}
 		});;
 		searchResults.pack();
-		searchResults.setResizable(false);
+		searchResults.setResizable(true);
 		searchResults.setLocationRelativeTo(null);
 	}
 	
@@ -130,6 +132,9 @@ public class Search implements ActionListener{
 		searchOptions.remove(submitButton);
 		searchOptions.add(queryField);
 		searchOptions.add(submitButton);
+		//searchOptions.setBounds();
 		searchOptions.pack();
+		Dimension d = searchOptions.getSize();
+		searchOptions.setBounds(new Rectangle(d));
 	}
 }
