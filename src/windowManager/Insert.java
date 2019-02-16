@@ -9,6 +9,8 @@ import java.awt.*;
  * Class for page of Inserting the artifacts
  */
 public class Insert {
+	
+	private Database dbMain;
 	private JRadioButton artifactRadio,materialRadio,categoryRadio,collectRadio,ownerRadio;
 	private ButtonGroup radioGroup;
 	private JButton submitButton,insertButton;
@@ -130,7 +132,8 @@ public class Insert {
 	 * default constructor
 	 * constructs frame
 	 */
-	public Insert() {
+	public Insert(Database dbMain) {
+		this.dbMain=dbMain;
 		setRadio();
 		setLabels();
 		setFields();

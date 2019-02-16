@@ -1,8 +1,10 @@
 package windowManager;
 
-import java.awt.*;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
+import java.sql.SQLException;
+import java.util.Vector;
 
 /**
  * Home-page class of the software
@@ -12,11 +14,13 @@ import javax.swing.*;
 public class HomePage {
 	
 	private JFrame homePageFrame;
+	private Database dbMain;
 	private GridLayout labelLayout, buttonLayout;
 	private BoxLayout frameLayout;
 	private JButton searchButton, insertButton, deleteButton, updateButton;
 	private JLabel idLabel, nameLabel, descLabel, locLabel, remarkLabel, yearLabel, collectLabel, ownerLabel, categoryLabel, materialLabel;
 	private JPanel labelPanel, buttonPanel;
+	private JTable artifactTable;
 	
 	/**
 	 * this method constructs all the buttons and adds listeners
@@ -25,25 +29,25 @@ public class HomePage {
 		searchButton=new JButton("Search");
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				new Search();
+				new Search(dbMain);
 			}
 		});
 		insertButton=new JButton("Insert");
 		insertButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				new Insert();
+				new Insert(dbMain);
 			}
 		});;
 		deleteButton=new JButton("Delete");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				new Delete();
+				new Delete(dbMain);
 			}
 		});;
 		updateButton=new JButton("Update");
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				new Update();
+				new Update(dbMain);
 			}
 		});;
 	}
@@ -90,10 +94,22 @@ public class HomePage {
 		buttonPanel.add(deleteButton);
 	}
 	
+	private void constructArtifactTable() {
+		try {
+			int colomnCount=dbMain.rsmd.getColumnCount();
+		}
+		catch(SQLException sqle) {
+			dbMain.SQLExceptionMessage();
+		}
+		Vector artifactData=new Vector();
+		Vector rowData=new Vector();
+	}
+	
 	/**
 	 * the default constructor calls the methods for components and constructs the frame
 	 */
-	public HomePage() {
+	public HomePage(Database dbMain) {
+		this.dbMain=dbMain;
 		setLabels();
 		setButtons();
 		setPanel();
@@ -102,7 +118,8 @@ public class HomePage {
 		homePageFrame.setLayout(frameLayout);
 		homePageFrame.setVisible(true);
 		homePageFrame.add(labelPanel);
-		homePageFrame.add(new JTextArea(10,10));
+		constructArtifactTable();
+		homePageFrame.add(artifactTable);
 		homePageFrame.add(buttonPanel);
 		homePageFrame.pack();
 		homePageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

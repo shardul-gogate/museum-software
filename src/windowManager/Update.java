@@ -9,6 +9,8 @@ import java.awt.event.*;
  * Class used for the page of Updating the artifact
  */
 public class Update {
+	
+	private Database dbMain;
 	private JFrame updateOptions,updateFieldsFrame;
 	private JRadioButton artifactRadio,materialRadio,categoryRadio,collectRadio,ownerRadio;
 	private ButtonGroup radioGroup;
@@ -129,7 +131,8 @@ public class Update {
 	 * default constructor
 	 * constructs frame and adds components
 	 */
-	public Update() {
+	public Update(Database dbMain) {
+		this.dbMain=dbMain;
 		setRadio();
 		setLabels();
 		setFields();

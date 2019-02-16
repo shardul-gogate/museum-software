@@ -8,7 +8,7 @@ import java.awt.event.*;
  * First screen of the software thus contains main method
  */
 public class Login {
-	
+	protected Database dbMain;
 	private JTextField userName;
 	private JPasswordField passWord;
 	private JFrame loginFrame;
@@ -44,7 +44,7 @@ public class Login {
 		loginFrame.add(loginButton);
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				new HomePage();
+				new HomePage(dbMain);
 				loginFrame.dispose();
 			}
 		});
@@ -57,7 +57,7 @@ public class Login {
 	/**
 	 * Main method of the software
 	 * Launches the software by giving call to the Login class constructor
-	 */
+	*/
 	public static void main(String args[]) {
 		new Login();
 		//new HomePage();

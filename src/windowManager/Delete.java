@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class Delete {
+
+	private Database dbMain;
 	private JFrame deleteOptions;
 	private JPanel radioPanel;
 	private BoxLayout frameLayout,radioPanelLayout;
@@ -44,7 +46,8 @@ public class Delete {
 	 * default constructor
 	 * constructs frame and adds components
 	 */
-	public Delete() {
+	public Delete(Database dbMain) {
+		this.dbMain=dbMain;
 		setRadio();
 		deleteLabel=new JLabel("Update entry in table:");
 		idLabel= new JLabel("Enter ID:");

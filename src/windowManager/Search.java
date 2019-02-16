@@ -8,6 +8,7 @@ import java.awt.event.*;
  */
 public class Search implements ActionListener{
 	
+	private Database dbMain;
 	private JFrame searchOptions,searchResults;
 	private JPanel radioPanel;
 	private BoxLayout frameLayout,resultLayout,radioPanelLayout;
@@ -70,7 +71,8 @@ public class Search implements ActionListener{
 	 * constructs frame and calls component methods
 	 * adds action listener to search button to proceed to search results under appropriate circumstances
 	 */
-	public Search() {
+	public Search(Database dbMain) {
+		this.dbMain=dbMain;
 		setRadio();
 		searchLabel=new JLabel("Seach By");
 		queryField=new JTextField(15);
