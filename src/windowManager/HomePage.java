@@ -4,7 +4,9 @@ import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.Vector;
+import java.sql.Statement;
 
 /**
  * Home-page class of the software
@@ -15,12 +17,13 @@ public class HomePage {
 	
 	private JFrame homePageFrame;
 	private Database dbMain;
-	private GridLayout labelLayout, buttonLayout;
+	private GridLayout buttonLayout;
 	private BoxLayout frameLayout;
 	private JButton searchButton, insertButton, deleteButton, updateButton;
-	private JLabel idLabel, nameLabel, descLabel, locLabel, remarkLabel, yearLabel, collectLabel, ownerLabel, categoryLabel, materialLabel;
-	private JPanel labelPanel, buttonPanel;
+	private JPanel buttonPanel;
 	private JTable artifactTable;
+	private ResultSet allArtifacts;
+	private Statement artifactStmt;
 	
 	/**
 	 * this method constructs all the buttons and adds listeners
@@ -31,6 +34,8 @@ public class HomePage {
 			public void actionPerformed(ActionEvent ae) {
 				new Search(dbMain);
 				constructArtifactTable();
+				homePageFrame.add(artifactTable);
+				homePageFrame.add(buttonPanel);
 			}
 		});
 		insertButton=new JButton("Insert");
@@ -38,6 +43,8 @@ public class HomePage {
 			public void actionPerformed(ActionEvent ae) {
 				new Insert(dbMain);
 				constructArtifactTable();
+				homePageFrame.add(artifactTable);
+				homePageFrame.add(buttonPanel);
 			}
 		});;
 		deleteButton=new JButton("Delete");
@@ -45,6 +52,8 @@ public class HomePage {
 			public void actionPerformed(ActionEvent ae) {
 				new Delete(dbMain);
 				constructArtifactTable();
+				homePageFrame.add(artifactTable);
+				homePageFrame.add(buttonPanel);
 			}
 		});;
 		updateButton=new JButton("Update");
@@ -52,24 +61,10 @@ public class HomePage {
 			public void actionPerformed(ActionEvent ae) {
 				new Update(dbMain);
 				constructArtifactTable();
+				homePageFrame.add(artifactTable);
+				homePageFrame.add(buttonPanel);
 			}
 		});;
-	}
-	
-	/**
-	 * this method constructs all the labels
-	 */
-	private void setLabels() {
-		idLabel=new JLabel("ID");
-		nameLabel=new JLabel("Name");
-		descLabel=new JLabel("Description");
-		locLabel=new JLabel("Location");
-		remarkLabel=new JLabel("Remark");
-		yearLabel=new JLabel("Year");
-		collectLabel=new JLabel("Collection");
-		ownerLabel=new JLabel("Owner");
-		categoryLabel=new JLabel("Category");
-		materialLabel=new JLabel("Material");
 	}
 	
 	/**
@@ -89,36 +84,36 @@ public class HomePage {
 		Vector<Vector<String>> artifactData=new Vector<Vector<String>>();
 		Vector<String> colomnName=new Vector<String>();
 		try {
-			dbMain.rs=dbMain.stmt.executeQuery("SELECT * FROM artifact;");
-			dbMain.rsmd=dbMain.rs.getMetaData();
+			artifactStmt=dbMain.conn.createStatement();
+			allArtifacts=artifactStmt.executeQuery("SELECT * FROM artifact;");
+			dbMain.rsmd=allArtifacts.getMetaData();
 			int colomnCount=dbMain.rsmd.getColumnCount();
 			for(int i=1;i<=colomnCount;i++) {
 				String currentColomnName=dbMain.rsmd.getColumnName(i);
 				colomnName.add(currentColomnName);
 			}
 			artifactData.add(colomnName);
-			dbMain.rs=dbMain.stmt.executeQuery("Select * from Artifact;");
-			while(dbMain.rs.next()) {
+			while(allArtifacts.next()) {
 				Vector<String> rowData=new Vector<String>();
-				String artifactId=dbMain.rs.getString(1);
+				String artifactId=Integer.toString(allArtifacts.getInt(1));
 				rowData.add(artifactId);
-				String artifactName=dbMain.rs.getString(2);
+				String artifactName=allArtifacts.getString(2);
 				rowData.add(artifactName);
-				String remark=dbMain.rs.getString(4);
+				String remark=allArtifacts.getString(4);
 				rowData.add(remark);
-				String location=dbMain.rs.getString(3);
+				String location=allArtifacts.getString(3);
 				rowData.add(location);
-				String description=dbMain.rs.getString(5);
+				String description=allArtifacts.getString(5);
 				rowData.add(description);
-				String year=dbMain.rs.getString(6);
+				String year=Integer.toString(allArtifacts.getInt(6));
 				rowData.add(year);
-				String materialName=dbMain.getEntryName(dbMain.rs.getString(7),"material","materialName","materialId");
+				String materialName=dbMain.getEntryName("materialname","material","materialid",allArtifacts.getInt(7));
 				rowData.add(materialName);
-				String categoryName=dbMain.getEntryName(dbMain.rs.getString(8),"category","categoryName","categoryId");
+				String categoryName=dbMain.getEntryName("categoryname","category","categoryid",allArtifacts.getInt(8));
 				rowData.add(categoryName);
-				String ownerName=dbMain.getEntryName(dbMain.rs.getString(9),"owner","ownerName","ownerId");
+				String ownerName=dbMain.getEntryName("ownername","owner","ownerid",allArtifacts.getInt(9));
 				rowData.add(ownerName);
-				String collection=dbMain.getEntryName(dbMain.rs.getString(10),"collection","givenby","collectId");
+				String collection=dbMain.getEntryName("givenby","collection","collectid",allArtifacts.getInt(10));
 				rowData.add(collection);
 				artifactData.add(rowData);
 			}
@@ -134,7 +129,7 @@ public class HomePage {
 	 */
 	public HomePage(Database dbMain) {
 		this.dbMain=dbMain;
-		setLabels();
+		allArtifacts=null;
 		setButtons();
 		setPanel();
 		homePageFrame=new JFrame("Home Page");

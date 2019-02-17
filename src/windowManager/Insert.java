@@ -36,15 +36,12 @@ public class Insert {
 		artifactRadio=new JRadioButton("Artifact",true);
 		radioGroup.add(artifactRadio);
 		materialRadio=new JRadioButton("Material");
-		materialRadio.setActionCommand("material");
 		radioGroup.add(materialRadio);
 		categoryRadio=new JRadioButton("Category");
-		categoryRadio.setActionCommand("category");
 		radioGroup.add(categoryRadio);
 		collectRadio=new JRadioButton("Collection");
 		radioGroup.add(collectRadio);
 		ownerRadio=new JRadioButton("Owner");
-		ownerRadio.setActionCommand("owner");
 		radioGroup.add(ownerRadio);
 		radioPanel.add(artifactRadio);
 		radioPanel.add(categoryRadio);
@@ -75,6 +72,15 @@ public class Insert {
 		description=new JTextArea(5,15);
 	}
 	
+	private void clearAllInputs() {
+		idField.setText("");
+		nameField.setText("");
+		locField.setText("");
+		remarkField.setText("");
+		description.setText("");
+		yearField.setText("");
+	}
+	
 	private void constructLists() {
 		Vector<String> listContents=new Vector<String>();
 		listContents=dbMain.getAllEntries("materialName","material");
@@ -99,7 +105,7 @@ public class Insert {
 	}
 	
 	private void constructFieldsPanel() {
-		fieldsPanelLayout=new GridLayout(4,2);
+		fieldsPanelLayout=new GridLayout(5,2);
 		fieldsPanel=new JPanel();
 		fieldsPanel.setLayout(fieldsPanelLayout);
 		fieldsPanel.add(idLabel);
@@ -110,6 +116,8 @@ public class Insert {
 		fieldsPanel.add(locField);
 		fieldsPanel.add(remarkLabel);
 		fieldsPanel.add(remarkField);
+		fieldsPanel.add(yearLabel);
+		fieldsPanel.add(yearField);
 	}
 	
 	/**
@@ -182,10 +190,6 @@ public class Insert {
 		insertFieldsFrame.setLocationRelativeTo(null);
 	}
 	
-	private void executeArtifact() {
-		
-	}
-	
 	/**
 	 * default constructor
 	 * constructs frame
@@ -204,10 +208,42 @@ public class Insert {
 		insertButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String entryName=nameField.getText();
-				int entryId=Integer.parseInt(idField.getText());
+				String entryIdText=idField.getText();
+				String yearText=yearField.getText();
+				if(entryName.isEmpty() || entryIdText.isEmpty()) {
+					JOptionPane.showMessageDialog(null,"No input can be left empty","Empty input",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				int entryId=Integer.parseInt(entryIdText);
 				try {
 					if(artifactRadio.isSelected()) {
-						executeArtifact();
+						String location=locField.getText();
+						String remark=remarkField.getText();
+						String descText=description.getText();
+						String materialSelected=materialBox.getItemAt(materialBox.getSelectedIndex());
+						String categorySelected=categoryBox.getItemAt(categoryBox.getSelectedIndex());
+						String ownerSelected=ownerBox.getItemAt(ownerBox.getSelectedIndex());
+						String collectSelected=collectBox.getItemAt(collectBox.getSelectedIndex());
+						if(yearText.isEmpty() || location.isEmpty() || remark.isEmpty() || descText.isEmpty() || materialSelected.isEmpty() || categorySelected.isEmpty() || ownerSelected.isEmpty() || collectSelected.isEmpty()) {
+							JOptionPane.showMessageDialog(null,"No input can be left empty","Empty input",JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						int materialId=dbMain.getEntryId("materialid","material","materialname",materialSelected);
+						int categoryId=dbMain.getEntryId("categoryid","category","categoryname",categorySelected);
+						int ownerId=dbMain.getEntryId("ownerid","owner","ownername",ownerSelected);
+						int collectId=dbMain.getEntryId("collectid","collection","givenby",collectSelected);
+						int year=Integer.parseInt(yearText);
+						dbMain.insertArtifact.setInt(1,entryId);
+						dbMain.insertArtifact.setString(2,entryName);
+						dbMain.insertArtifact.setString(3,location);
+						dbMain.insertArtifact.setString(4,remark);
+						dbMain.insertArtifact.setString(5,descText);
+						dbMain.insertArtifact.setInt(6,year);
+						dbMain.insertArtifact.setInt(7,materialId);
+						dbMain.insertArtifact.setInt(8,categoryId);
+						dbMain.insertArtifact.setInt(9,ownerId);
+						dbMain.insertArtifact.setInt(10,collectId);
+						dbMain.insertArtifact.execute();
 					}
 					else if(materialRadio.isSelected()) {
 						dbMain.insertMaterial.setInt(1,entryId);
@@ -225,19 +261,24 @@ public class Insert {
 						dbMain.insertCategory.execute();
 					}
 					else if(collectRadio.isSelected()) {
-						int givenYear=Integer.parseInt(yearField.getText());
-						dbMain.insertCategory.setInt(1,entryId);
-						dbMain.insertCategory.setString(2,entryName);
-						dbMain.insertCategory.setInt(1,givenYear);
-						dbMain.insertCategory.execute();
+						if(yearText.isEmpty()) {
+							JOptionPane.showMessageDialog(null,"No input can be left empty","Empty input",JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						int year=Integer.parseInt(yearText);
+						dbMain.insertCollection.setInt(1,entryId);
+						dbMain.insertCollection.setString(2,entryName);
+						dbMain.insertCollection.setInt(3,year);
+						dbMain.insertCollection.execute();
 					}
 				}
 				catch(SQLException sqle) {
 					JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 				}
 				JOptionPane.showMessageDialog(null,"Your record has been succesfully\nadded to the databse","Success",JOptionPane.INFORMATION_MESSAGE);
+				clearAllInputs();
 				insertFieldsFrame.dispose();
-				insertOptions.setVisible(true);
+				insertOptions.dispose();
 			}
 		});
 		insertOptions.add(insertLabel);

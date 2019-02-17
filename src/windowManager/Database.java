@@ -13,11 +13,27 @@ public class Database {
 	public PreparedStatement updateArtifact,updateCategory,updateOwner,updateMaterial,updateCollection;
 	public PreparedStatement deleteEntry,searchArtifact;
 	
-	public String getEntryName(String primaryKeyValue,String tableName,String colomnName,String primaryKeyName) {
+	public String getEntryName(String colomnName,String tableName,String key,int value) {
 		String colomnData=null;
 		try {
-			rs=stmt.executeQuery("SELECT " + colomnName + " FROM " + tableName + " WHERE " + primaryKeyName + "=" + primaryKeyValue);
-			colomnData= rs.getString(1);
+			rs=stmt.executeQuery("SELECT " + colomnName + " FROM " + tableName + " WHERE " + key + "=" + value);
+			while(rs.next()) {
+				colomnData=rs.getString(1);
+			}
+		}
+		catch(SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
+		}
+		return colomnData;
+	}
+	
+	public int getEntryId(String colomnName,String tableName,String key,String value) {
+		int colomnData=0;
+		try {
+			rs=stmt.executeQuery("SELECT " + colomnName + " FROM " + tableName + " WHERE " + key + "='" + value +"'");
+			while(rs.next()) {
+				colomnData=Integer.parseInt(rs.getString(1));
+			}
 		}
 		catch(SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);

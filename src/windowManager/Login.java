@@ -73,8 +73,8 @@ public class Login {
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if(credentialsValid()) {
-					new HomePage(dbMain);
 					loginFrame.dispose();
+					new HomePage(dbMain);
 				}
 			}
 		});
@@ -89,12 +89,13 @@ public class Login {
 	 * Launches the software by giving call to the Login class constructor
 	*/
 	public static void main(String args[]) {
+		//Database dbMain=new Database();
 		new Login();
-		//new HomePage();
-		//new Search();
-		//new Insert();
-		//new Update();
-		//new Delete();
+		//new HomePage(dbMain);
+		//new Search(dbMain);
+		//new Insert(dbMain);
+		//new Update(dbMain);
+		//new Delete(dbMain);
 		return;
 	}
 }
