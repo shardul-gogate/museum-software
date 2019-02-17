@@ -30,24 +30,28 @@ public class HomePage {
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Search(dbMain);
+				constructArtifactTable();
 			}
 		});
 		insertButton=new JButton("Insert");
 		insertButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Insert(dbMain);
+				constructArtifactTable();
 			}
 		});;
 		deleteButton=new JButton("Delete");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Delete(dbMain);
+				constructArtifactTable();
 			}
 		});;
 		updateButton=new JButton("Update");
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Update(dbMain);
+				constructArtifactTable();
 			}
 		});;
 	}
@@ -100,28 +104,28 @@ public class HomePage {
 				rowData.add(artifactId);
 				String artifactName=dbMain.rs.getString(2);
 				rowData.add(artifactName);
-				String remark=dbMain.rs.getString(3);
+				String remark=dbMain.rs.getString(4);
 				rowData.add(remark);
-				String location=dbMain.rs.getString(4);
+				String location=dbMain.rs.getString(3);
 				rowData.add(location);
 				String description=dbMain.rs.getString(5);
 				rowData.add(description);
 				String year=dbMain.rs.getString(6);
 				rowData.add(year);
-				String materialName=dbMain.getMaterialName(dbMain.rs.getString(6));
+				String materialName=dbMain.getEntryName(dbMain.rs.getString(7),"material","materialName","materialId");
 				rowData.add(materialName);
-				String categoryName=dbMain.getCategoryName(dbMain.rs.getString(7));
+				String categoryName=dbMain.getEntryName(dbMain.rs.getString(8),"category","categoryName","categoryId");
 				rowData.add(categoryName);
-				String ownerName=dbMain.getOwnerName(dbMain.rs.getString(8));
+				String ownerName=dbMain.getEntryName(dbMain.rs.getString(9),"owner","ownerName","ownerId");
 				rowData.add(ownerName);
-				String collection=dbMain.getCollectionName(dbMain.rs.getString(9));
+				String collection=dbMain.getEntryName(dbMain.rs.getString(10),"collection","givenby","collectId");
 				rowData.add(collection);
 				artifactData.add(rowData);
 			}
 			artifactTable=new JTable(artifactData,colomnName);
 		}
 		catch(SQLException sqle) {
-			dbMain.SQLExceptionMessage();
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

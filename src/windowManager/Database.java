@@ -1,7 +1,7 @@
 package windowManager;
 
 import java.sql.*;
-
+import java.util.Vector;
 import javax.swing.JOptionPane;
 
 public class Database {
@@ -9,61 +9,54 @@ public class Database {
 	public Statement stmt;
 	public ResultSet rs;
 	public ResultSetMetaData rsmd;
+	public PreparedStatement insertArtifact,insertCategory,insertOwner,insertMaterial,insertCollection;
+	public PreparedStatement updateArtifact,updateCategory,updateOwner,updateMaterial,updateCollection;
+	public PreparedStatement deleteEntry,searchArtifact;
 	
-	public void SQLExceptionMessage() {
-		JOptionPane.showMessageDialog(null,"Sorry!\nSQL encountered an error","SQL Exception",JOptionPane.ERROR_MESSAGE);
-	}
-	
-	public void UnknownErrorMessage() {
-		JOptionPane.showMessageDialog(null,"Sorry!\nAn unknown error was encountered","Unknown Error",JOptionPane.ERROR_MESSAGE);
-	}
-	
-	public String getMaterialName(String materialId) {
-		String materialName=null;
+	public String getEntryName(String primaryKeyValue,String tableName,String colomnName,String primaryKeyName) {
+		String colomnData=null;
 		try {
-			rs=stmt.executeQuery("SELECT mat_nam FROM mateial WHERE mat_id=" + materialId);
-			materialName= rs.getString(1);
+			rs=stmt.executeQuery("SELECT " + colomnName + " FROM " + tableName + " WHERE " + primaryKeyName + "=" + primaryKeyValue);
+			colomnData= rs.getString(1);
 		}
 		catch(SQLException sqle) {
-			SQLExceptionMessage();
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
-		return materialName;
+		return colomnData;
 	}
 	
-	public String getCategoryName(String categorylId) {
-		String categoryName=null;
+	public Vector<String> getAllEntries(String colomnName,String tableName) {
+		Vector<String> listContents=new Vector<String>();
 		try {
-			rs=stmt.executeQuery("SELECT cat_name FROM mateial WHERE cat_id=" + categorylId);
-			categoryName=rs.getString(1);
+			rs=stmt.executeQuery("SELECT " + colomnName + " FROM " + tableName);
+			while(rs.next()) {
+				listContents.add(rs.getString(1));
+			}
 		}
 		catch(SQLException sqle) {
-			SQLExceptionMessage();
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
-		return categoryName;
+		return listContents;
 	}
 	
-	public String getCollectionName(String collectionlId) {
-		String collectionName=null;
+	private void prepareAllStatements() {
 		try {
-			rs=stmt.executeQuery("SELECT collect_name FROM mateial WHERE collect_id=" + collectionlId);
-			collectionName=rs.getString(1);
+			insertArtifact=conn.prepareStatement("INSERT INTO artifact VALUES(?,?,?,?,?,?,?,?,?,?);");
+			insertOwner=conn.prepareStatement("INSERT INTO owner VALUES(?,?);");
+			insertCategory=conn.prepareStatement("INSERT INTO category VALUES(?,?);");
+			insertMaterial=conn.prepareStatement("INSERT INTO material VALUES(?,?);");
+			insertCollection=conn.prepareStatement("INSERT INTO collection VALUES(?,?,?);");
+			updateArtifact=conn.prepareStatement("UPDATE artifact SET artifactId=?,artifactName=?,location=?,remark=?,description=?,year=?,materialId=?,categoryId=?,ownerId=?,collectId=? where artifactId=?");
+			updateMaterial=conn.prepareStatement("UPDATE material SET materialId=?,materialName=? where materialId=?");
+			updateOwner=conn.prepareStatement("UPDATE owner SET ownerId=?,ownerName=? where ownerId=?");
+			updateCategory=conn.prepareStatement("UPDATE category SET categoryId=?,categoryName=? where categoryId=?;");
+			updateCollection=conn.prepareStatement("UPDATE collection SET collectId=?,givenby=?,giveninyear=? where collectId=?");
+			deleteEntry=conn.prepareStatement("DELETE FROM ? WHERE ?=?;");
+			searchArtifact=conn.prepareStatement("SELECT * FROM artifact where ?=?;");
 		}
 		catch(SQLException sqle) {
-			SQLExceptionMessage();
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
-		return collectionName;
-	}
-	
-	public String getOwnerName(String ownerId) {
-		String ownerName=null;
-		try {
-			rs=stmt.executeQuery("SELECT owner_name FROM mateial WHERE owner_id=" + ownerId);
-			ownerName=rs.getString(1);
-		}
-		catch(SQLException sqle) {
-			SQLExceptionMessage();
-		}
-		return ownerName;
 	}
 	
 	public Database() {
@@ -71,13 +64,13 @@ public class Database {
 			Class.forName("org.postgresql.Driver");
 			conn=DriverManager.getConnection("jdbc:postgresql://localhost/postgres","postgres","abcd1234");
 			stmt=conn.createStatement();
+			prepareAllStatements();
 		}
 		catch(ClassNotFoundException cnfe) {
-			UnknownErrorMessage();
+			JOptionPane.showMessageDialog(null,cnfe,"ClassNotFound Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
 		catch(SQLException sqle) {
-			//SQLExceptionMessage();
-			JOptionPane.showMessageDialog(null,sqle,"SQL Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

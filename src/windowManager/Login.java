@@ -39,7 +39,7 @@ public class Login {
 		}
 		catch(SQLException sqle) {
 			//dbMain.SQLExceptionMessage();
-			JOptionPane.showMessageDialog(null,sqle,"SQL Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
 		JOptionPane.showMessageDialog(null,"Please enter a correct Username","Wrong Username",JOptionPane.ERROR_MESSAGE);
 		return false;

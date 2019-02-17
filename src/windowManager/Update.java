@@ -1,7 +1,6 @@
 package windowManager;
 
 import javax.swing.*;
-
 import java.awt.GridLayout;
 import java.awt.event.*;
 

@@ -2,7 +2,9 @@ package windowManager;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.awt.*;
+import java.sql.SQLException;
+import java.awt.GridLayout;
+import java.util.Vector;
 
 /**
  * Still under construction
@@ -14,13 +16,13 @@ public class Insert {
 	private JRadioButton artifactRadio,materialRadio,categoryRadio,collectRadio,ownerRadio;
 	private ButtonGroup radioGroup;
 	private JButton submitButton,insertButton;
-	private JPanel radioPanel,fieldsPanel;
+	private JPanel radioPanel,fieldsPanel,listPanel,combinedPanel;
 	private JFrame insertOptions,insertFieldsFrame;
-	private BoxLayout optionsLayout,fieldsFrameLayout,radioLayout;
-	private GridLayout fieldsPanelLayout;
+	private BoxLayout optionsLayout,fieldsFrameLayout,radioLayout,combinedLayout;
+	private GridLayout fieldsPanelLayout,listPanelLayout;
 	private JTextField idField,nameField,yearField,locField,remarkField;
 	private JTextArea description;
-	private JComboBox collectBox,categoryBox,materialBox,OwnerBox;
+	private JComboBox<String> collectBox,categoryBox,materialBox,ownerBox;
 	private JLabel idLabel,nameLabel,yearLabel,locLabel,remarkLabel,descLabel,collectLabel,ownerLabel,materialLabel,categoryLabel,insertLabel;
 	
 	/**
@@ -34,12 +36,15 @@ public class Insert {
 		artifactRadio=new JRadioButton("Artifact",true);
 		radioGroup.add(artifactRadio);
 		materialRadio=new JRadioButton("Material");
+		materialRadio.setActionCommand("material");
 		radioGroup.add(materialRadio);
 		categoryRadio=new JRadioButton("Category");
+		categoryRadio.setActionCommand("category");
 		radioGroup.add(categoryRadio);
 		collectRadio=new JRadioButton("Collection");
 		radioGroup.add(collectRadio);
 		ownerRadio=new JRadioButton("Owner");
+		ownerRadio.setActionCommand("owner");
 		radioGroup.add(ownerRadio);
 		radioPanel.add(artifactRadio);
 		radioPanel.add(categoryRadio);
@@ -70,12 +75,61 @@ public class Insert {
 		description=new JTextArea(5,15);
 	}
 	
+	private void constructLists() {
+		Vector<String> listContents=new Vector<String>();
+		listContents=dbMain.getAllEntries("materialName","material");
+		materialBox=new JComboBox<String>(listContents);
+		listContents=dbMain.getAllEntries("categoryName","category");
+		categoryBox=new JComboBox<String>(listContents);
+		listContents=dbMain.getAllEntries("ownerName","owner");
+		ownerBox=new JComboBox<String>(listContents);
+		listContents=dbMain.getAllEntries("givenBy","collection");
+		collectBox=new JComboBox<String>(listContents);
+		listPanel=new JPanel();
+		listPanelLayout=new GridLayout(4,2);
+		listPanel.setLayout(listPanelLayout);
+		listPanel.add(materialLabel);
+		listPanel.add(materialBox);
+		listPanel.add(categoryLabel);
+		listPanel.add(categoryBox);
+		listPanel.add(ownerLabel);
+		listPanel.add(ownerBox);
+		listPanel.add(collectLabel);
+		listPanel.add(collectBox);
+	}
+	
+	private void constructFieldsPanel() {
+		fieldsPanelLayout=new GridLayout(4,2);
+		fieldsPanel=new JPanel();
+		fieldsPanel.setLayout(fieldsPanelLayout);
+		fieldsPanel.add(idLabel);
+		fieldsPanel.add(idField);
+		fieldsPanel.add(nameLabel);
+		fieldsPanel.add(nameField);
+		fieldsPanel.add(locLabel);
+		fieldsPanel.add(locField);
+		fieldsPanel.add(remarkLabel);
+		fieldsPanel.add(remarkField);
+	}
+	
 	/**
 	 * this method is invoked if the user wants to insert an artifact
 	 */
 	private void artifactFrame() {
 		insertFieldsFrame=new JFrame("Insert");
-		
+		fieldsFrameLayout=new BoxLayout(insertFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
+		insertFieldsFrame.setLayout(fieldsFrameLayout);
+		constructLists();
+		constructFieldsPanel();
+		combinedPanel=new JPanel();
+		combinedLayout=new BoxLayout(combinedPanel,BoxLayout.X_AXIS);
+		combinedPanel.setLayout(combinedLayout);
+		combinedPanel.add(fieldsPanel);
+		combinedPanel.add(listPanel);
+		insertFieldsFrame.add(combinedPanel);
+		insertFieldsFrame.add(descLabel);
+		insertFieldsFrame.add(description);
+		insertFieldsFrame.add(insertButton);
 		insertFieldsFrame.pack();
 		insertFieldsFrame.setVisible(true);
 		insertFieldsFrame.setResizable(false);
@@ -128,6 +182,10 @@ public class Insert {
 		insertFieldsFrame.setLocationRelativeTo(null);
 	}
 	
+	private void executeArtifact() {
+		
+	}
+	
 	/**
 	 * default constructor
 	 * constructs frame
@@ -143,14 +201,60 @@ public class Insert {
 		insertOptions.setLayout(optionsLayout);
 		submitButton=new JButton("Submit");
 		insertButton=new JButton("Insert");
+		insertButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String entryName=nameField.getText();
+				int entryId=Integer.parseInt(idField.getText());
+				try {
+					if(artifactRadio.isSelected()) {
+						executeArtifact();
+					}
+					else if(materialRadio.isSelected()) {
+						dbMain.insertMaterial.setInt(1,entryId);
+						dbMain.insertMaterial.setString(2,entryName);
+						dbMain.insertMaterial.execute();
+					}
+					else if(ownerRadio.isSelected()) {
+						dbMain.insertOwner.setInt(1,entryId);
+						dbMain.insertOwner.setString(2,entryName);
+						dbMain.insertOwner.execute();
+					}
+					else if(categoryRadio.isSelected()) {
+						dbMain.insertCategory.setInt(1,entryId);
+						dbMain.insertCategory.setString(2,entryName);
+						dbMain.insertCategory.execute();
+					}
+					else if(collectRadio.isSelected()) {
+						int givenYear=Integer.parseInt(yearField.getText());
+						dbMain.insertCategory.setInt(1,entryId);
+						dbMain.insertCategory.setString(2,entryName);
+						dbMain.insertCategory.setInt(1,givenYear);
+						dbMain.insertCategory.execute();
+					}
+				}
+				catch(SQLException sqle) {
+					JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
+				}
+				JOptionPane.showMessageDialog(null,"Your record has been succesfully\nadded to the databse","Success",JOptionPane.INFORMATION_MESSAGE);
+				insertFieldsFrame.dispose();
+				insertOptions.setVisible(true);
+			}
+		});
 		insertOptions.add(insertLabel);
 		insertOptions.add(radioPanel);
 		insertOptions.add(submitButton);
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				if(artifactRadio.isSelected()) artifactFrame();
-				else if(materialRadio.isSelected() || ownerRadio.isSelected() || categoryRadio.isSelected()) genericFrame();
-				else if(collectRadio.isSelected()) collectFrame();
+				if(artifactRadio.isSelected()) {
+					artifactFrame();
+				}
+				else if(materialRadio.isSelected() || ownerRadio.isSelected() || categoryRadio.isSelected()) {
+					genericFrame();
+				}
+				else if(collectRadio.isSelected()) {
+					collectFrame();
+				}
+				insertOptions.setVisible(false);
 			}
 		});
 		insertOptions.pack();
