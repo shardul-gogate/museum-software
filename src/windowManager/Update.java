@@ -3,6 +3,7 @@ package windowManager;
 import javax.swing.*;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.util.Vector;
 
 /**
  * Class used for the page of Updating the artifact
@@ -14,12 +15,12 @@ public class Update {
 	private JRadioButton artifactRadio,materialRadio,categoryRadio,collectRadio,ownerRadio;
 	private ButtonGroup radioGroup;
 	private JButton submitButton,insertButton;
-	private JPanel radioPanel,fieldsPanel;
-	private BoxLayout optionsLayout,fieldsoptionsLayout,radioLayout;
-	private GridLayout fieldsPanelLayout;
+	private JPanel radioPanel,fieldsPanel,listPanel,combinedPanel;
+	private BoxLayout optionsLayout,radioLayout,combinedLayout,fieldsFrameLayout;
+	private GridLayout fieldsPanelLayout,listPanelLayout;
 	private JTextField idField,nameField,yearField,locField,remarkField;
 	private JTextArea description;
-	private JComboBox collectBox,categoryBox,materialBox,OwnerBox;
+	private JComboBox collectBox,categoryBox,materialBox,ownerBox;
 	private JLabel idLabel,nameLabel,yearLabel,locLabel,remarkLabel,descLabel,collectLabel,ownerLabel,materialLabel,categoryLabel,insertLabel,updateLabel;
 	
 	/**
@@ -69,9 +70,69 @@ public class Update {
 		description=new JTextArea(5,15);
 	}
 	
+	private void clearAllInputs() {
+		idField.setText("");
+		nameField.setText("");
+		locField.setText("");
+		remarkField.setText("");
+		description.setText("");
+		yearField.setText("");
+	}
+	
+	private void constructLists() {
+		Vector<String> listContents=new Vector<String>();
+		listContents=dbMain.getAllEntries("materialName","material");
+		materialBox=new JComboBox<String>(listContents);
+		listContents=dbMain.getAllEntries("categoryName","category");
+		categoryBox=new JComboBox<String>(listContents);
+		listContents=dbMain.getAllEntries("ownerName","owner");
+		ownerBox=new JComboBox<String>(listContents);
+		listContents=dbMain.getAllEntries("givenBy","collection");
+		collectBox=new JComboBox<String>(listContents);
+		listPanel=new JPanel();
+		listPanelLayout=new GridLayout(4,2);
+		listPanel.setLayout(listPanelLayout);
+		listPanel.add(materialLabel);
+		listPanel.add(materialBox);
+		listPanel.add(categoryLabel);
+		listPanel.add(categoryBox);
+		listPanel.add(ownerLabel);
+		listPanel.add(ownerBox);
+		listPanel.add(collectLabel);
+		listPanel.add(collectBox);
+	}
+	
+	private void constructFieldsPanel() {
+		fieldsPanelLayout=new GridLayout(5,2);
+		fieldsPanel=new JPanel();
+		fieldsPanel.setLayout(fieldsPanelLayout);
+		fieldsPanel.add(idLabel);
+		fieldsPanel.add(idField);
+		fieldsPanel.add(nameLabel);
+		fieldsPanel.add(nameField);
+		fieldsPanel.add(locLabel);
+		fieldsPanel.add(locField);
+		fieldsPanel.add(remarkLabel);
+		fieldsPanel.add(remarkField);
+		fieldsPanel.add(yearLabel);
+		fieldsPanel.add(yearField);
+	}
+	
 	private void artifactFrame() {
 		updateFieldsFrame=new JFrame("Insert");
-		
+		fieldsFrameLayout=new BoxLayout(updateFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
+		updateFieldsFrame.setLayout(fieldsFrameLayout);
+		constructLists();
+		constructFieldsPanel();
+		combinedPanel=new JPanel();
+		combinedLayout=new BoxLayout(combinedPanel,BoxLayout.X_AXIS);
+		combinedPanel.setLayout(combinedLayout);
+		combinedPanel.add(fieldsPanel);
+		combinedPanel.add(listPanel);
+		updateFieldsFrame.add(combinedPanel);
+		updateFieldsFrame.add(descLabel);
+		updateFieldsFrame.add(description);
+		updateFieldsFrame.add(insertButton);
 		updateFieldsFrame.pack();
 		updateFieldsFrame.setVisible(true);
 		updateFieldsFrame.setResizable(false);
@@ -83,8 +144,8 @@ public class Update {
 		if(materialRadio.isSelected()) updateFieldsFrame.setTitle("Material");
 		else if(ownerRadio.isSelected()) updateFieldsFrame.setTitle("Owner");
 		else if(categoryRadio.isSelected()) updateFieldsFrame.setTitle("Category");
-		fieldsoptionsLayout=new BoxLayout(updateFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
-		updateFieldsFrame.setLayout(fieldsoptionsLayout);
+		fieldsFrameLayout=new BoxLayout(updateFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
+		updateFieldsFrame.setLayout(fieldsFrameLayout);
 		fieldsPanel=new JPanel();
 		fieldsPanelLayout=new GridLayout(2,2);
 		fieldsPanel.setLayout(fieldsPanelLayout);
@@ -104,8 +165,8 @@ public class Update {
 	
 	private void collectFrame() {
 		updateFieldsFrame=new JFrame("Collection");
-		fieldsoptionsLayout=new BoxLayout(updateFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
-		updateFieldsFrame.setLayout(fieldsoptionsLayout);
+		fieldsFrameLayout=new BoxLayout(updateFieldsFrame.getContentPane(),BoxLayout.Y_AXIS);
+		updateFieldsFrame.setLayout(fieldsFrameLayout);
 		fieldsPanel=new JPanel();
 		fieldsPanelLayout=new GridLayout(3,2);
 		fieldsPanel.setLayout(fieldsPanelLayout);

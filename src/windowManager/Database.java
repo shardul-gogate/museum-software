@@ -11,7 +11,8 @@ public class Database {
 	public ResultSetMetaData rsmd;
 	public PreparedStatement insertArtifact,insertCategory,insertOwner,insertMaterial,insertCollection;
 	public PreparedStatement updateArtifact,updateCategory,updateOwner,updateMaterial,updateCollection;
-	public PreparedStatement deleteEntry,searchArtifact;
+	public PreparedStatement deleteArtifact,deleteCategory,deleteMaterial,deleteOwner,deleteCollection;
+	public PreparedStatement searchArtifact;
 	
 	public String getEntryName(String colomnName,String tableName,String key,int value) {
 		String colomnData=null;
@@ -67,7 +68,11 @@ public class Database {
 			updateOwner=conn.prepareStatement("UPDATE owner SET ownerId=?,ownerName=? where ownerId=?");
 			updateCategory=conn.prepareStatement("UPDATE category SET categoryId=?,categoryName=? where categoryId=?;");
 			updateCollection=conn.prepareStatement("UPDATE collection SET collectId=?,givenby=?,giveninyear=? where collectId=?");
-			deleteEntry=conn.prepareStatement("DELETE FROM ? WHERE ?=?;");
+			deleteArtifact=conn.prepareStatement("DELETE FROM artifact WHERE artifactid=?;");
+			deleteCategory=conn.prepareStatement("DELETE FROM category WHERE categoryid=?;");
+			deleteMaterial=conn.prepareStatement("DELETE FROM material WHERE materialid=?;");
+			deleteOwner=conn.prepareStatement("DELETE FROM owner WHERE ownerid=?;");
+			deleteCollection=conn.prepareStatement("DELETE FROM collection WHERE collectid=?;");
 			searchArtifact=conn.prepareStatement("SELECT * FROM artifact where ?=?;");
 		}
 		catch(SQLException sqle) {

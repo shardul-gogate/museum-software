@@ -33,36 +33,24 @@ public class HomePage {
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Search(dbMain);
-				constructArtifactTable();
-				homePageFrame.add(artifactTable);
-				homePageFrame.add(buttonPanel);
 			}
 		});
 		insertButton=new JButton("Insert");
 		insertButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Insert(dbMain);
-				constructArtifactTable();
-				homePageFrame.add(artifactTable);
-				homePageFrame.add(buttonPanel);
 			}
 		});;
 		deleteButton=new JButton("Delete");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Delete(dbMain);
-				constructArtifactTable();
-				homePageFrame.add(artifactTable);
-				homePageFrame.add(buttonPanel);
 			}
 		});;
 		updateButton=new JButton("Update");
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				new Update(dbMain);
-				constructArtifactTable();
-				homePageFrame.add(artifactTable);
-				homePageFrame.add(buttonPanel);
 			}
 		});;
 	}

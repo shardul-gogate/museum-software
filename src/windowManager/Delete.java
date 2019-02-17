@@ -1,6 +1,8 @@
 package windowManager;
 
 import java.awt.event.*;
+import java.sql.SQLException;
+
 import javax.swing.*;
 
 public class Delete {
@@ -40,6 +42,36 @@ public class Delete {
 		radioPanel.add(ownerRadio);
 	}
 	
+	private int performDelete(int deleteId) {
+		int confirmDelete=0;
+		try {
+			if(artifactRadio.isSelected()) {
+				dbMain.deleteArtifact.setInt(1,deleteId);
+				confirmDelete=dbMain.deleteArtifact.executeUpdate();
+			}
+			else if(materialRadio.isSelected() ){
+				dbMain.deleteMaterial.setInt(1,deleteId);
+				confirmDelete=dbMain.deleteMaterial.executeUpdate();
+			}
+			else if(ownerRadio.isSelected()) {
+				dbMain.deleteOwner.setInt(1,deleteId);
+				confirmDelete=dbMain.deleteOwner.executeUpdate();
+			}
+			else if(categoryRadio.isSelected()) {
+				dbMain.deleteCategory.setInt(1,deleteId);
+				confirmDelete=dbMain.deleteCategory.executeUpdate();
+			}
+			else if(collectRadio.isSelected()) {
+				dbMain.deleteCollection.setInt(1,deleteId);
+				confirmDelete=dbMain.deleteCollection.executeUpdate();
+			}
+		}
+		catch(SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
+		}
+		return confirmDelete;
+	}
+	
 	/**
 	 * default constructor
 	 * constructs frame and adds components
@@ -63,13 +95,21 @@ public class Delete {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String queryString=idField.getText();
+				int deleteId=Integer.parseInt(queryString);
+				int confirmDelete=0;
 				if(queryString.isEmpty()) {
 					JOptionPane.showMessageDialog(deleteOptions,"ID input field is empty","No input",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				int clickedResult=JOptionPane.showConfirmDialog(deleteOptions, "Are you sure you want to delete the entry?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 				if(clickedResult==JOptionPane.YES_OPTION) {
-					return;
+					confirmDelete=performDelete(deleteId);
+					if(confirmDelete>0) {
+						JOptionPane.showMessageDialog(null,"Your record has been succesfully\ndeleted from the databse","Success",JOptionPane.INFORMATION_MESSAGE);
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"There was an error deleting the record\nAre you sure you entred the ID right?","Unable to delete",JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else if(clickedResult==JOptionPane.NO_OPTION) {
 					return;
