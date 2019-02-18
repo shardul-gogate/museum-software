@@ -63,17 +63,17 @@ public class Database {
 			insertCategory=conn.prepareStatement("INSERT INTO category VALUES(?,?);");
 			insertMaterial=conn.prepareStatement("INSERT INTO material VALUES(?,?);");
 			insertCollection=conn.prepareStatement("INSERT INTO collection VALUES(?,?,?);");
-			updateArtifact=conn.prepareStatement("UPDATE artifact SET artifactId=?,artifactName=?,location=?,remark=?,description=?,year=?,materialId=?,categoryId=?,ownerId=?,collectId=? where artifactId=?");
-			updateMaterial=conn.prepareStatement("UPDATE material SET materialId=?,materialName=? where materialId=?");
-			updateOwner=conn.prepareStatement("UPDATE owner SET ownerId=?,ownerName=? where ownerId=?");
-			updateCategory=conn.prepareStatement("UPDATE category SET categoryId=?,categoryName=? where categoryId=?;");
-			updateCollection=conn.prepareStatement("UPDATE collection SET collectId=?,givenby=?,giveninyear=? where collectId=?");
+			updateArtifact=conn.prepareStatement("UPDATE artifact SET artifactId=?,artifactName=?,location=?,remark=?,description=?,year=?,materialId=?,categoryId=?,ownerId=?,collectId=? WHERE artifactId=?");
+			updateMaterial=conn.prepareStatement("UPDATE material SET materialId=?,materialName=? WHERE materialId=?");
+			updateOwner=conn.prepareStatement("UPDATE owner SET ownerId=?,ownerName=? WHERE ownerId=?");
+			updateCategory=conn.prepareStatement("UPDATE category SET categoryId=?,categoryName=? WHERE categoryId=?;");
+			updateCollection=conn.prepareStatement("UPDATE collection SET collectId=?,givenby=?,giveninyear=? WHERE collectId=?");
 			deleteArtifact=conn.prepareStatement("DELETE FROM artifact WHERE artifactid=?;");
 			deleteCategory=conn.prepareStatement("DELETE FROM category WHERE categoryid=?;");
 			deleteMaterial=conn.prepareStatement("DELETE FROM material WHERE materialid=?;");
 			deleteOwner=conn.prepareStatement("DELETE FROM owner WHERE ownerid=?;");
 			deleteCollection=conn.prepareStatement("DELETE FROM collection WHERE collectid=?;");
-			searchArtifact=conn.prepareStatement("SELECT * FROM artifact where ?=?;");
+			searchArtifact=conn.prepareStatement("SELECT * FROM artifact WHERE ?=?;");
 		}
 		catch(SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);

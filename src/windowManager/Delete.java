@@ -94,13 +94,13 @@ public class Delete {
 		deleteOptions.add(submitButton);
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				String queryString=idField.getText();
-				int deleteId=Integer.parseInt(queryString);
-				int confirmDelete=0;
-				if(queryString.isEmpty()) {
+				String queryId=idField.getText();
+				if(queryId.isEmpty()) {
 					JOptionPane.showMessageDialog(deleteOptions,"ID input field is empty","No input",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				int deleteId=Integer.parseInt(queryId);
+				int confirmDelete=0;
 				int clickedResult=JOptionPane.showConfirmDialog(deleteOptions, "Are you sure you want to delete the entry?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 				if(clickedResult==JOptionPane.YES_OPTION) {
 					confirmDelete=performDelete(deleteId);
@@ -109,6 +109,7 @@ public class Delete {
 					}
 					else {
 						JOptionPane.showMessageDialog(null,"There was an error deleting the record\nAre you sure you entred the ID right?","Unable to delete",JOptionPane.ERROR_MESSAGE);
+						return;
 					}
 				}
 				else if(clickedResult==JOptionPane.NO_OPTION) {
