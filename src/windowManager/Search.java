@@ -21,23 +21,31 @@ public class Search implements ActionListener{
 	private JLabel searchLabel;
 	private JTextField queryField;
 	private JButton submitButton;
-	private JComboBox<String> locationList;
+	private JComboBox<String> locationBox,collectBox,categoryBox,materialBox,ownerBox;
 	private JTable artifactTable;
 	private ResultSet allArtifacts;
 	private Statement artifactStmt;
 	
-	private void setLocationList() {
+	private void constructLists() {
 		Vector<String> listContents=new Vector<String>();
 		try {
 			dbMain.rs=dbMain.stmt.executeQuery("SELECT DISTINCT location FROM artifact");
 			while(dbMain.rs.next()) {
 				listContents.add(dbMain.rs.getString(1));
 			}
+			locationBox=new JComboBox<String>(listContents);
+			listContents=dbMain.getAllEntries("materialName","material");
+			materialBox=new JComboBox<String>(listContents);
+			listContents=dbMain.getAllEntries("categoryName","category");
+			categoryBox=new JComboBox<String>(listContents);
+			listContents=dbMain.getAllEntries("ownerName","owner");
+			ownerBox=new JComboBox<String>(listContents);
+			listContents=dbMain.getAllEntries("givenBy","collection");
+			collectBox=new JComboBox<String>(listContents);
 		}
 		catch(SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
 		}
-		locationList=new JComboBox<String>(listContents);
 	}
 	
 	/**
@@ -51,24 +59,100 @@ public class Search implements ActionListener{
 		yearRadio=new JRadioButton("Year");
 		yearRadio.addActionListener(this);
 		locRadio=new JRadioButton("Location");
-		locRadio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae)
-			{
-				searchOptions.remove(queryField);
-				searchOptions.remove(submitButton);
-				searchOptions.add(locationList);
-				searchOptions.add(submitButton);
-				searchOptions.pack();
+		locRadio.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ie) {
+				boolean selected=true;
+				if(ie.getStateChange()!=1) {
+					selected=false;
+				}
+				if(selected) {
+					searchOptions.remove(queryField);
+					searchOptions.remove(submitButton);
+					searchOptions.add(locationBox);
+					searchOptions.add(submitButton);
+					searchOptions.pack();
+				}
+				else {
+					searchOptions.remove(locationBox);
+				}
 			}
 		});
 		ownerRadio=new JRadioButton("Owner");
-		ownerRadio.addActionListener(this);
+		ownerRadio.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ie) {
+				boolean selected=true;
+				if(ie.getStateChange()!=1) {
+					selected=false;
+				}
+				if(selected) {
+					searchOptions.remove(queryField);
+					searchOptions.remove(submitButton);
+					searchOptions.add(ownerBox);
+					searchOptions.add(submitButton);
+					searchOptions.pack();
+				}
+				else {
+					searchOptions.remove(ownerBox);
+				}
+			}
+		});
 		collectRadio=new JRadioButton("Collection");
-		collectRadio.addActionListener(this);
+		collectRadio.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ie) {
+				boolean selected=true;
+				if(ie.getStateChange()!=1) {
+					selected=false;
+				}
+				if(selected) {
+					searchOptions.remove(queryField);
+					searchOptions.remove(submitButton);
+					searchOptions.add(collectBox);
+					searchOptions.add(submitButton);
+					searchOptions.pack();
+				}
+				else {
+					searchOptions.remove(collectBox);
+				}
+			}
+		});
 		materialRadio=new JRadioButton("Material");
-		materialRadio.addActionListener(this);
+		materialRadio.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ie) {
+				boolean selected=true;
+				if(ie.getStateChange()!=1) {
+					selected=false;
+				}
+				if(selected) {
+					searchOptions.remove(queryField);
+					searchOptions.remove(submitButton);
+					searchOptions.add(materialBox);
+					searchOptions.add(submitButton);
+					searchOptions.pack();
+				}
+				else {
+					searchOptions.remove(materialBox);
+				}
+			}
+		});
 		categoryRadio=new JRadioButton("Category");
-		categoryRadio.addActionListener(this);
+		categoryRadio.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ie) {
+				boolean selected=true;
+				if(ie.getStateChange()!=1) {
+					selected=false;
+				}
+				if(selected) {
+					searchOptions.remove(queryField);
+					searchOptions.remove(submitButton);
+					searchOptions.add(categoryBox);
+					searchOptions.add(submitButton);
+					searchOptions.pack();
+				}
+				else {
+					searchOptions.remove(categoryBox);
+				}
+			}
+		});
 		radioGroup=new ButtonGroup();
 		radioGroup.add(idRadio);
 		radioGroup.add(nameRadio);
@@ -111,7 +195,7 @@ public class Search implements ActionListener{
 			}
 			else if(materialRadio.isSelected() ) {
 				int materialId=dbMain.getEntryId("materialid","material","materialname",queryString);
-				allArtifacts=dbMain.stmt.executeQuery("SELECT * FROM artifact where materialid=" + materialId);
+				allArtifacts=artifactStmt.executeQuery("SELECT * FROM artifact where materialid=" + materialId);
 			}
 			else if(ownerRadio.isSelected()) {
 				int ownerId=dbMain.getEntryId("ownerid","owner","ownername",queryString);
@@ -184,7 +268,7 @@ public class Search implements ActionListener{
 	 */
 	public Search(Database dbMain) {
 		this.dbMain=dbMain;
-		setLocationList();
+		constructLists();
 		setRadio();
 		searchLabel=new JLabel("Seach By");
 		queryField=new JTextField(15);
@@ -201,15 +285,27 @@ public class Search implements ActionListener{
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String queryString=null;
-				if(!locRadio.isSelected()) {
+				if(idRadio.isSelected() || yearRadio.isSelected() || nameRadio.isSelected()) {
 					queryString=queryField.getText();
 					if(queryString.isEmpty()) {
 						JOptionPane.showMessageDialog(searchOptions,"Search input field is empty","No input",JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}
-				else {
-					queryString=locationList.getItemAt(locationList.getSelectedIndex());
+				else if(locRadio.isSelected()) {
+					queryString=locationBox.getItemAt(locationBox.getSelectedIndex());
+				}
+				else if(materialRadio.isSelected() ){
+					queryString=materialBox.getItemAt(materialBox.getSelectedIndex());
+				}
+				else if(ownerRadio.isSelected()) {
+					queryString=ownerBox.getItemAt(ownerBox.getSelectedIndex());
+				}
+				else if(categoryRadio.isSelected()) {
+					queryString=categoryBox.getItemAt(categoryBox.getSelectedIndex());
+				}
+				else if(collectRadio.isSelected()) {
+					queryString=collectBox.getItemAt(collectBox.getSelectedIndex());
 				}
 				constructResult(queryString);
 				showResult();
@@ -222,7 +318,6 @@ public class Search implements ActionListener{
 	
 	public void actionPerformed(ActionEvent ae)
 	{
-		searchOptions.remove(locationList);
 		searchOptions.remove(submitButton);
 		searchOptions.add(queryField);
 		searchOptions.add(submitButton);

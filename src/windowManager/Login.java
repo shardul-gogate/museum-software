@@ -89,9 +89,9 @@ public class Login {
 	 * Launches the software by giving call to the Login class constructor
 	*/
 	public static void main(String args[]) {
-		//Database dbMain=new Database();
-		new Login();
-		//new HomePage(dbMain);
+		Database dbMain=new Database();
+		//new Login();
+		new HomePage(dbMain);
 		//new Search(dbMain);
 		//new Insert(dbMain);
 		//new Update(dbMain);

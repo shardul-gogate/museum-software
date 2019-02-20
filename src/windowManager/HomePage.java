@@ -3,6 +3,7 @@ package windowManager;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Vector;
@@ -22,8 +23,13 @@ public class HomePage {
 	private JButton searchButton, insertButton, deleteButton, updateButton;
 	private JPanel buttonPanel;
 	private JTable artifactTable;
+	private DefaultTableModel tabModel;
 	private ResultSet allArtifacts;
 	private Statement artifactStmt;
+	private JMenuBar menuBar;
+	private JMenu reportMenu,tabOptMenu,subMenu;
+	private JMenuItem locRep,catRep,matRep,artRep,refreshTab,artTab,catTab,matTab;
+	private String currTab;
 	
 	/**
 	 * this method constructs all the buttons and adds listeners
@@ -68,6 +74,146 @@ public class HomePage {
 		buttonPanel.add(deleteButton);
 	}
 	
+	private void addMenuBar() {
+		menuBar=new JMenuBar();
+		reportMenu=new JMenu("Generate Report");
+		locRep=new JMenuItem("Location");
+		catRep=new JMenuItem("Catagory");
+		matRep=new JMenuItem("Material");
+		artRep=new JMenuItem("Artifact");
+		reportMenu.add(locRep);
+		reportMenu.add(catRep);
+		reportMenu.add(matRep);
+		reportMenu.add(artRep);
+		menuBar.add(reportMenu);
+		tabOptMenu=new JMenu("Table Options");
+		subMenu=new JMenu("Display Table");
+		artTab=new JMenuItem("Artifact");
+		artTab.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(!currTab.equals("art")) {
+					tabModel=(DefaultTableModel)artifactTable.getModel();
+					tabModel.setRowCount(0);
+					constructArtifactTable();
+					homePageFrame.add(artifactTable);
+					homePageFrame.add(buttonPanel);
+					homePageFrame.pack();
+				}
+			}
+		});
+		catTab=new JMenuItem("Category");
+		catTab.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(!currTab.equals("cat")) {
+					tabModel=(DefaultTableModel)artifactTable.getModel();
+					tabModel.setRowCount(0);
+					constructCategoryTable();
+					homePageFrame.add(artifactTable);
+					homePageFrame.add(buttonPanel);
+					homePageFrame.pack();
+				}
+			}
+		});
+		matTab=new JMenuItem("Material");
+		matTab.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if(!currTab.equals("mat")) {
+					tabModel=(DefaultTableModel)artifactTable.getModel();
+					tabModel.setRowCount(0);
+					constructMaterialTable();
+					homePageFrame.add(artifactTable);
+					homePageFrame.add(buttonPanel);
+					homePageFrame.pack();
+				}
+			}
+		});
+		subMenu.add(artTab);
+		subMenu.add(catTab);
+		subMenu.add(matTab);
+		tabOptMenu.add(subMenu);
+		tabOptMenu.addSeparator();
+		refreshTab=new JMenuItem("Refresh table");
+		tabOptMenu.add(refreshTab);
+		refreshTab.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				tabModel=(DefaultTableModel)artifactTable.getModel();
+				tabModel.setRowCount(0);
+				if(currTab.equals("art")) {
+					constructArtifactTable();
+				}
+				else if(currTab.equals("cat")) {
+					constructCategoryTable();
+				}
+				else if(currTab.equals("mat")) {
+					constructMaterialTable();
+				}
+				homePageFrame.add(artifactTable);
+				homePageFrame.add(buttonPanel);
+				homePageFrame.pack();
+			}
+		});
+		menuBar.add(tabOptMenu);
+		homePageFrame.setJMenuBar(menuBar);
+	}
+	
+	private void constructCategoryTable() {
+		Vector<Vector<String>> categoryData=new Vector<Vector<String>>();
+		Vector<String> colomnName=new Vector<String>();
+		try {
+			artifactStmt=dbMain.conn.createStatement();
+			allArtifacts=artifactStmt.executeQuery("SELECT * FROM category;");
+			dbMain.rsmd=allArtifacts.getMetaData();
+			int colomnCount=dbMain.rsmd.getColumnCount();
+			for(int i=1;i<=colomnCount;i++) {
+				String currentColomnName=dbMain.rsmd.getColumnName(i);
+				colomnName.add(currentColomnName);
+			}
+			categoryData.add(colomnName);
+			while(allArtifacts.next()) {
+				Vector<String> rowData=new Vector<String>();
+				String categoryId=Integer.toString(allArtifacts.getInt(1));
+				rowData.add(categoryId);
+				String categoryName=allArtifacts.getString(2);
+				rowData.add(categoryName);
+				categoryData.add(rowData);
+			}
+			artifactTable=new JTable(categoryData,colomnName);
+			currTab="cat";
+		}
+		catch(SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void constructMaterialTable() {
+		Vector<Vector<String>> materialData=new Vector<Vector<String>>();
+		Vector<String> colomnName=new Vector<String>();
+		try {
+			artifactStmt=dbMain.conn.createStatement();
+			allArtifacts=artifactStmt.executeQuery("SELECT * FROM material;");
+			dbMain.rsmd=allArtifacts.getMetaData();
+			int colomnCount=dbMain.rsmd.getColumnCount();
+			for(int i=1;i<=colomnCount;i++) {
+				String currentColomnName=dbMain.rsmd.getColumnName(i);
+				colomnName.add(currentColomnName);
+			}
+			materialData.add(colomnName);
+			while(allArtifacts.next()) {
+				Vector<String> rowData=new Vector<String>();
+				String materialId=Integer.toString(allArtifacts.getInt(1));
+				rowData.add(materialId);
+				String materialName=allArtifacts.getString(2);
+				rowData.add(materialName);
+				materialData.add(rowData);
+			}
+			artifactTable=new JTable(materialData,colomnName);
+			currTab="mat";
+		}
+		catch(SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	private void constructArtifactTable() {
 		Vector<Vector<String>> artifactData=new Vector<Vector<String>>();
 		Vector<String> colomnName=new Vector<String>();
@@ -105,7 +251,9 @@ public class HomePage {
 				rowData.add(collection);
 				artifactData.add(rowData);
 			}
+			//JTable constTable=new JTable(artifactData,colomnName);
 			artifactTable=new JTable(artifactData,colomnName);
+			currTab="art";
 		}
 		catch(SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle,"SQL Exception Occured",JOptionPane.ERROR_MESSAGE);
@@ -118,12 +266,14 @@ public class HomePage {
 	public HomePage(Database dbMain) {
 		this.dbMain=dbMain;
 		allArtifacts=null;
+		currTab="art";
 		setButtons();
 		setPanel();
 		homePageFrame=new JFrame("Home Page");
 		frameLayout=new BoxLayout(homePageFrame.getContentPane(),BoxLayout.Y_AXIS);
 		homePageFrame.setLayout(frameLayout);
 		homePageFrame.setVisible(true);
+		addMenuBar();
 		constructArtifactTable();
 		homePageFrame.add(artifactTable);
 		homePageFrame.add(buttonPanel);
