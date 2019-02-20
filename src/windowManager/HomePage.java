@@ -76,17 +76,27 @@ public class HomePage {
 	
 	private void addMenuBar() {
 		menuBar=new JMenuBar();
-		reportMenu=new JMenu("Generate Report");
+		reportMenu=new JMenu("Report");
 		locRep=new JMenuItem("Location");
 		catRep=new JMenuItem("Catagory");
 		matRep=new JMenuItem("Material");
+		matRep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Report(dbMain,2);				
+			}
+		});
 		artRep=new JMenuItem("Artifact");
+		artRep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				new Report(dbMain,1);
+			}
+		});
 		reportMenu.add(locRep);
 		reportMenu.add(catRep);
 		reportMenu.add(matRep);
 		reportMenu.add(artRep);
 		menuBar.add(reportMenu);
-		tabOptMenu=new JMenu("Table Options");
+		tabOptMenu=new JMenu("Options");
 		subMenu=new JMenu("Display Table");
 		artTab=new JMenuItem("Artifact");
 		artTab.addActionListener(new ActionListener() {
@@ -233,10 +243,10 @@ public class HomePage {
 				rowData.add(artifactId);
 				String artifactName=allArtifacts.getString(2);
 				rowData.add(artifactName);
-				String remark=allArtifacts.getString(4);
-				rowData.add(remark);
 				String location=allArtifacts.getString(3);
 				rowData.add(location);
+				String remark=allArtifacts.getString(4);
+				rowData.add(remark);
 				String description=allArtifacts.getString(5);
 				rowData.add(description);
 				String year=Integer.toString(allArtifacts.getInt(6));
